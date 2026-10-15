@@ -99,3 +99,33 @@ def test_valve_wear_has_elevated_vibration_rms():
     worn_rms = np.sqrt(np.mean(worn["knock_sensor"].to_numpy() ** 2))
 
     assert worn_rms > normal_rms * 1.5
+
+
+def test_accelerometer_axes_exist_and_are_finite():
+    _, waveform = simulate_engine("valve_train_wear", seed=42)
+
+    for axis in ("accel_x", "accel_y", "accel_z"):
+        assert axis in waveform.columns
+        assert np.isfinite(waveform[axis].to_numpy()).all()
+
+
+def test_valve_wear_increases_accelerometer_x_rms():
+    _, normal = simulate_engine("normal", seed=42)
+    _, worn = simulate_engine("valve_train_wear", seed=42)
+
+    normal_rms = np.sqrt(np.mean(normal["accel_x"].to_numpy() ** 2))
+    worn_rms = np.sqrt(np.mean(worn["accel_x"].to_numpy() ** 2))
+
+    assert worn_rms > normal_rms * 1.5
+
+
+def test_knock_condition_has_retarded_simulated_ignition_timing():
+    normal, knock = (
+        simulate_engine(condition, seed=42)[0]
+        for condition in ("normal", "knock")
+    )
+
+    assert "ignition_timing_deg" in normal.columns
+    assert knock["ignition_timing_deg"].mean() < (
+        normal["ignition_timing_deg"].mean() - 2
+    )
