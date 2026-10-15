@@ -218,3 +218,27 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# EngineGuard ML local data and generated artifacts
+.venv/
+ml/datasets/**
+!ml/datasets/.gitkeep
+ml/datasets/**/*.wav
+ml/datasets/**/*.flac
+ml/datasets/**/*.mp3
+ml/datasets/**/*.ogg
+ml/datasets/**/*.zip
+ml/datasets/**/*.tar
+ml/datasets/**/*.tar.gz
+ml/datasets/**/*.tgz
+ml/datasets/**/*.7z
+ml/datasets/**/*.rar
+*.joblib
+*.pkl
+ml/evaluation/*.png
+ml/evaluation/*.csv
+ml/evaluation/*.json
+ml/evaluation/*.txt
+!ml/evaluation/acoustic_hlcead_rpm.json
+!ml/evaluation/acoustic_hlcead_novelty_baseline.json
+!ml/evaluation/acoustic_hlcead_novelty_transient.json

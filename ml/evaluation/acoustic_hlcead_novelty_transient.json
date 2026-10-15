@@ -1,0 +1,320 @@
+{
+  "dataset": "HL-CEAD",
+  "feature_set": "transient",
+  "task": "RPM-conditioned acoustic novelty relative to an unlabeled reference set; not fault detection",
+  "recordings": 152,
+  "cars": 52,
+  "rpm_recording_counts": {
+    "1000": 52,
+    "1500": 48,
+    "2000": 52
+  },
+  "outer_evaluation": "5-fold StratifiedGroupKFold by manufacturer/model/recording stem; all preprocessing estimators and thresholds fit inside training-car fold",
+  "threshold_calibration": {
+    "method": "4-fold GroupKFold cross-fitted score distribution on outer-training cars, with separate threshold by RPM",
+    "nominal_expected_reference_alert_rate": 0.05,
+    "final_crossfit_training_reference_alert_rate_by_rpm": {
+      "1000": 0.057692307692307696,
+      "1500": 0.0625,
+      "2000": 0.057692307692307696
+    },
+    "limitation": "Nominal rate is relative to cross-fitted HL-CEAD reference scores; it is not a calibrated false-fault rate and need not hold for future vehicles or conditions."
+  },
+  "outer_folds": [
+    {
+      "fold": 1,
+      "train_cars": 41,
+      "test_cars": 11,
+      "detector_fit_recordings_by_rpm": {
+        "1000": 41,
+        "1500": 38,
+        "2000": 41
+      },
+      "threshold_by_rpm": {
+        "1000": 0.049703299156941716,
+        "1500": 0.06209502015377796,
+        "2000": 0.05405950652847724
+      },
+      "calibration_reference_alert_rate_by_rpm": {
+        "1000": 0.04878048780487805,
+        "1500": 0.05263157894736842,
+        "2000": 0.04878048780487805
+      },
+      "heldout_reference_score_distribution_by_routed_rpm": {
+        "1000": {
+          "count": 11,
+          "mean": -0.03728865177424352,
+          "std": 0.026324079214112655,
+          "median": -0.03460084779088324,
+          "p95": -0.00447016329235933,
+          "alert_rate": 0.0
+        },
+        "1500": {
+          "count": 12,
+          "mean": -0.055796981421403165,
+          "std": 0.0327100380901151,
+          "median": -0.06673952260020846,
+          "p95": 0.010092455829680222,
+          "alert_rate": 0.0
+        },
+        "2000": {
+          "count": 9,
+          "mean": -0.04947068201747492,
+          "std": 0.03203335852780356,
+          "median": -0.045186462137722094,
+          "p95": -0.0024717580481538395,
+          "alert_rate": 0.0
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "train_cars": 41,
+      "test_cars": 11,
+      "detector_fit_recordings_by_rpm": {
+        "1000": 41,
+        "1500": 38,
+        "2000": 41
+      },
+      "threshold_by_rpm": {
+        "1000": 0.038346562975255516,
+        "1500": 0.05501874675470028,
+        "2000": 0.052091403664225155
+      },
+      "calibration_reference_alert_rate_by_rpm": {
+        "1000": 0.04878048780487805,
+        "1500": 0.05263157894736842,
+        "2000": 0.04878048780487805
+      },
+      "heldout_reference_score_distribution_by_routed_rpm": {
+        "1000": {
+          "count": 12,
+          "mean": -0.03517317351196253,
+          "std": 0.035328725551584575,
+          "median": -0.03898244392062375,
+          "p95": 0.026094978389152562,
+          "alert_rate": 0.08333333333333333
+        },
+        "1500": {
+          "count": 11,
+          "mean": -0.057703805312106886,
+          "std": 0.0439284979877456,
+          "median": -0.06961193124936182,
+          "p95": 0.01993023220386242,
+          "alert_rate": 0.0
+        },
+        "2000": {
+          "count": 9,
+          "mean": -0.04572954258776783,
+          "std": 0.01723147117343177,
+          "median": -0.045982565242817464,
+          "p95": -0.01932595166248231,
+          "alert_rate": 0.0
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "train_cars": 42,
+      "test_cars": 10,
+      "detector_fit_recordings_by_rpm": {
+        "1000": 42,
+        "1500": 39,
+        "2000": 42
+      },
+      "threshold_by_rpm": {
+        "1000": 0.04261005154923481,
+        "1500": 0.06246190658061925,
+        "2000": 0.0618515830021658
+      },
+      "calibration_reference_alert_rate_by_rpm": {
+        "1000": 0.07142857142857142,
+        "1500": 0.05128205128205128,
+        "2000": 0.07142857142857142
+      },
+      "heldout_reference_score_distribution_by_routed_rpm": {
+        "1000": {
+          "count": 9,
+          "mean": -0.043128865873567554,
+          "std": 0.035490296933819686,
+          "median": -0.05267992485491407,
+          "p95": 0.014291422773396463,
+          "alert_rate": 0.0
+        },
+        "1500": {
+          "count": 8,
+          "mean": -0.06519473571626344,
+          "std": 0.02334163118360849,
+          "median": -0.0739781867153683,
+          "p95": -0.027215150273895955,
+          "alert_rate": 0.0
+        },
+        "2000": {
+          "count": 12,
+          "mean": -0.055162914477307534,
+          "std": 0.01553459563994068,
+          "median": -0.06003138896812421,
+          "p95": -0.031800590792180394,
+          "alert_rate": 0.0
+        }
+      }
+    },
+    {
+      "fold": 4,
+      "train_cars": 42,
+      "test_cars": 10,
+      "detector_fit_recordings_by_rpm": {
+        "1000": 42,
+        "1500": 39,
+        "2000": 42
+      },
+      "threshold_by_rpm": {
+        "1000": 0.04604264844465834,
+        "1500": 0.057177563667863106,
+        "2000": 0.060596393428901704
+      },
+      "calibration_reference_alert_rate_by_rpm": {
+        "1000": 0.07142857142857142,
+        "1500": 0.05128205128205128,
+        "2000": 0.07142857142857142
+      },
+      "heldout_reference_score_distribution_by_routed_rpm": {
+        "1000": {
+          "count": 11,
+          "mean": -0.027496846238634964,
+          "std": 0.036700656855496214,
+          "median": -0.02690191195006303,
+          "p95": 0.021499160899880576,
+          "alert_rate": 0.0
+        },
+        "1500": {
+          "count": 8,
+          "mean": -0.05128596563869027,
+          "std": 0.022671565658720767,
+          "median": -0.05668713644171147,
+          "p95": -0.014850806086272405,
+          "alert_rate": 0.0
+        },
+        "2000": {
+          "count": 10,
+          "mean": -0.03846373009764754,
+          "std": 0.0224967089723388,
+          "median": -0.03685639459181775,
+          "p95": -0.007257024676315961,
+          "alert_rate": 0.0
+        }
+      }
+    },
+    {
+      "fold": 5,
+      "train_cars": 42,
+      "test_cars": 10,
+      "detector_fit_recordings_by_rpm": {
+        "1000": 42,
+        "1500": 38,
+        "2000": 42
+      },
+      "threshold_by_rpm": {
+        "1000": 0.04087553078183545,
+        "1500": 0.03449167685464737,
+        "2000": 0.05166702265349577
+      },
+      "calibration_reference_alert_rate_by_rpm": {
+        "1000": 0.07142857142857142,
+        "1500": 0.05263157894736842,
+        "2000": 0.07142857142857142
+      },
+      "heldout_reference_score_distribution_by_routed_rpm": {
+        "1000": {
+          "count": 11,
+          "mean": -0.012337039015105784,
+          "std": 0.052039503350290645,
+          "median": -0.008838460999276432,
+          "p95": 0.06476049145055635,
+          "alert_rate": 0.18181818181818182
+        },
+        "1500": {
+          "count": 7,
+          "mean": -0.03249266155036096,
+          "std": 0.03178126938831966,
+          "median": -0.020450797413722743,
+          "p95": 0.0050374154566423576,
+          "alert_rate": 0.0
+        },
+        "2000": {
+          "count": 12,
+          "mean": 0.002034217388542009,
+          "std": 0.04775150898109169,
+          "median": 0.010775501427487066,
+          "p95": 0.06583606735316834,
+          "alert_rate": 0.16666666666666666
+        }
+      }
+    }
+  ],
+  "oof_rpm_routing_accuracy": 0.7631578947368421,
+  "oof_reference_score_distribution_by_routed_rpm": {
+    "1000": {
+      "count": 54,
+      "mean": -0.030714551524323803,
+      "std": 0.039551064630893064,
+      "median": -0.03452140312557986,
+      "p95": 0.04201327236577926,
+      "alert_rate": 0.05555555555555555
+    },
+    "1500": {
+      "count": 46,
+      "mean": -0.053556519069177605,
+      "std": 0.034290087486150596,
+      "median": -0.06456305417365366,
+      "p95": 0.011136794508477044,
+      "alert_rate": 0.0
+    },
+    "2000": {
+      "count": 52,
+      "mean": -0.03613430168247782,
+      "std": 0.03709074587090142,
+      "median": -0.04468096542146219,
+      "p95": 0.043506901067754365,
+      "alert_rate": 0.038461538461538464
+    }
+  },
+  "oof_reference_alert_rate": 0.03289473684210526,
+  "synthetic_perturbation_evaluation": {
+    "synthetic_impulsive_knocks": {
+      "label": "SYNTHETIC PERTURBATIONS; not genuine engine faults",
+      "score_distribution": {
+        "count": 152,
+        "mean": -0.03924284526664391,
+        "std": 0.03839253647506263,
+        "median": -0.04585742562771705,
+        "p95": 0.034330656986456605
+      },
+      "alert_rate_against_vehicle_grouped_thresholds": 0.03289473684210526
+    },
+    "synthetic_periodic_clicks": {
+      "label": "SYNTHETIC PERTURBATIONS; not genuine engine faults",
+      "score_distribution": {
+        "count": 152,
+        "mean": 0.07580418349118061,
+        "std": 0.034397100063038144,
+        "median": 0.07576594645426116,
+        "p95": 0.12457228831247825
+      },
+      "alert_rate_against_vehicle_grouped_thresholds": 0.7631578947368421
+    },
+    "synthetic_amplitude_modulation": {
+      "label": "SYNTHETIC PERTURBATIONS; not genuine engine faults",
+      "score_distribution": {
+        "count": 152,
+        "mean": 0.0050280971462802445,
+        "std": 0.033864858477417686,
+        "median": -0.002152568529915022,
+        "p95": 0.06168291547380031
+      },
+      "alert_rate_against_vehicle_grouped_thresholds": 0.11842105263157894
+    }
+  },
+  "generalization_statement": "Scores and alert rates are evaluated on cars absent from the detector/scaler fit. Because HL-CEAD has no verified normal/fault status, this only measures reference-distribution transfer to unseen cars; it cannot establish fault sensitivity, specificity, or diagnosis.",
+  "model_artifact": "ml\\saved_models\\acoustic_hlcead_novelty_transient.joblib"
+}
