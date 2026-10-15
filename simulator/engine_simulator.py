@@ -68,11 +68,17 @@ def simulate_engine(
         load = np.clip(load * 0.92, 0.05, 0.95)
         ignition -= 1.0
 
-    # Interpolate RPM to waveform time. This prototype uses a simplified
-    # evenly spaced pulse train; it is not a full crank-wheel model.
+    # Interpolate RPM to waveform time and integrate crank angle.
+    # CKP pulses use the configurable missing-tooth wheel model.
+    # At finite sampling rates, some tooth events may be unresolved.
+    from simulator.ckp_model import generate_ckp
+
     rpm_wave = np.interp(tw, t, rpm)
-    phase = np.cumsum(rpm_wave / 60.0 / signal_hz) * 2 * np.pi
-    crank_pulse = (np.sin(phase) > 0.98).astype(np.int8)
+    crank_angle_deg = (
+        np.cumsum(rpm_wave / 60.0 / signal_hz) * 360.0
+    )
+    phase = np.deg2rad(crank_angle_deg)
+    crank_pulse = generate_ckp(crank_angle_deg, signal_hz)
 
     engine_order_hz = rpm_wave / 60.0 * 2
     combustion = 0.18 * np.sin(

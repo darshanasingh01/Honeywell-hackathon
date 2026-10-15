@@ -129,3 +129,16 @@ def test_knock_condition_has_retarded_simulated_ignition_timing():
     assert knock["ignition_timing_deg"].mean() < (
         normal["ignition_timing_deg"].mean() - 2
     )
+
+
+def test_integrated_ckp_is_binary_and_contains_pulses():
+    _, waveform = simulate_engine(
+        "normal", duration_s=2, signal_hz=4000, seed=42
+    )
+
+    ckp = waveform["crank_pulse"].to_numpy()
+
+    assert set(np.unique(ckp)).issubset({0, 1})
+    assert np.count_nonzero(ckp) > 0
+    assert np.count_nonzero(ckp) < len(ckp)
+    assert np.isfinite(ckp).all()
