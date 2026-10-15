@@ -142,3 +142,54 @@ def test_integrated_ckp_is_binary_and_contains_pulses():
     assert np.count_nonzero(ckp) > 0
     assert np.count_nonzero(ckp) < len(ckp)
     assert np.isfinite(ckp).all()
+
+
+CAN_SIGNAL_COLUMNS = (
+    "engine_rpm",
+    "coolant_temp_c",
+    "throttle_pct",
+    "engine_load",
+    "stft_pct",
+    "ltft_pct",
+)
+
+
+def test_six_can_style_signal_columns_exist():
+    telemetry, _ = simulate_engine("normal", duration_s=2, seed=42)
+
+    for column in CAN_SIGNAL_COLUMNS:
+        assert column in telemetry.columns, f"Missing signal: {column}"
+
+
+@pytest.mark.parametrize("condition", CONDITIONS)
+def test_six_can_style_signals_are_finite_for_all_conditions(condition):
+    telemetry, _ = simulate_engine(
+        condition, duration_s=2, seed=42
+    )
+
+    for column in CAN_SIGNAL_COLUMNS:
+        values = telemetry[column].to_numpy(dtype=float)
+        assert np.isfinite(values).all(), (
+            f"{column} contains non-finite values for {condition}"
+        )
+
+
+@pytest.mark.parametrize("condition", CONDITIONS)
+def test_six_can_style_signal_ranges_are_valid(condition):
+    telemetry, _ = simulate_engine(
+        condition, duration_s=2, seed=42
+    )
+
+    assert (telemetry["engine_rpm"] > 0).all()
+    assert telemetry["coolant_temp_c"].between(-20, 200).all()
+    assert telemetry["throttle_pct"].between(0, 100).all()
+    assert telemetry["engine_load"].between(0, 1).all()
+
+
+def test_six_can_style_signal_schema_is_consistent_across_conditions():
+    for condition in CONDITIONS:
+        telemetry, _ = simulate_engine(
+            condition, duration_s=2, seed=42
+        )
+        assert all(column in telemetry.columns for column in CAN_SIGNAL_COLUMNS)
+        assert telemetry["condition"].eq(condition).all()

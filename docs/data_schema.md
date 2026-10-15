@@ -36,6 +36,27 @@ Files are generated in `data/raw/`.
 | `ignition_timing_deg` | Simulated spark advance relative to TDC | crank degrees |
 | `condition` | Synthetic class label | category |
 
+### Six ECU-style signals for integration
+
+The following six fields form the initial ECU-style telemetry interface for the simulator. They are synthetic values, not decoded CAN frames or measurements from a production engine.
+
+| Signal | CSV field | Unit / scale |
+|---|---|---|
+| Engine speed | `engine_rpm` | rpm |
+| Coolant temperature | `coolant_temp_c` | °C |
+| Throttle position | `throttle_pct` | % |
+| Engine load | `engine_load` | Normalized scale, 0–1 |
+| Short-term fuel trim | `stft_pct` | % |
+| Long-term fuel trim | `ltft_pct` | % |
+
+**Integration notes**
+- Preserve these exact column names when consuming the generated telemetry.
+- `timestamp_s` provides the telemetry time base; the default sampling rate is 10 Hz.
+- `condition` is the synthetic ground-truth label for the generated recording.
+- `ignition_timing_deg` is an additional ECU-style telemetry field outside the six-signal interface.
+- These fields are simulated directly by the generator. Real CAN integration would require a defined message/frame layout, signal scaling, offsets, and decoding rules.
+- Confirm the schema and units with Person B before feature extraction or windowing.
+
 ## Waveform — nominally 4,000 Hz
 
 | Column | Meaning | Units |
