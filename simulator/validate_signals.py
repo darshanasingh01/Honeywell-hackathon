@@ -37,8 +37,25 @@ def main():
                 raise ValueError(f"{condition}: inconsistent labels in {name}")
             if frame["condition"].iloc[0] != condition:
                 raise ValueError(f"{condition}: incorrect label in {name}")
+            
+            timestamps = frame["timestamp_s"].to_numpy(dtype=float)
+
             if not frame["timestamp_s"].is_monotonic_increasing:
                 raise ValueError(f"{condition}: timestamps not increasing in {name}")
+
+            expected_rate = 10 if name == "telemetry" else 4000
+            expected_interval = 1.0 / expected_rate
+
+            if len(timestamps) > 1:
+                intervals = np.diff(timestamps)
+                if not np.allclose(
+                    intervals, expected_interval, rtol=1e-7, atol=1e-10
+                ):
+                    raise ValueError(
+                        f"{condition}: irregular sampling in {name}; "
+                        f"expected interval {expected_interval} s"
+                    )
+
 
         rows.append({
             "condition": condition,
