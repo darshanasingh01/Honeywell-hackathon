@@ -37,7 +37,7 @@ def main():
                 raise ValueError(f"{condition}: inconsistent labels in {name}")
             if frame["condition"].iloc[0] != condition:
                 raise ValueError(f"{condition}: incorrect label in {name}")
-            
+
             timestamps = frame["timestamp_s"].to_numpy(dtype=float)
 
             if not frame["timestamp_s"].is_monotonic_increasing:
