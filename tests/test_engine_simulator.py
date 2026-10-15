@@ -32,12 +32,17 @@ def test_expected_sensor_columns_exist():
 def test_sampling_rates_and_timestamps():
     telemetry, waveform = simulate_engine(
         "normal", duration_s=2, telemetry_hz=10,
-        signal_hz=4000, seed=7
+        signal_hz=25600, seed=7
     )
     assert len(telemetry) == 20
-    assert len(waveform) == 8000
+    assert len(waveform) == 51200
     assert np.all(np.diff(telemetry["timestamp_s"]) > 0)
     assert np.all(np.diff(waveform["timestamp_s"]) > 0)
+
+
+def test_default_signal_rate_is_25600():
+    _, waveform = simulate_engine("normal", duration_s=1, seed=7)
+    assert len(waveform) == 25600
 
 
 def test_seed_makes_simulation_reproducible():
@@ -57,14 +62,21 @@ def test_invalid_sampling_rate_is_rejected():
         simulate_engine("normal", telemetry_hz=0)
 
 
-def test_knock_has_elevated_knock_sensor_rms():
+def test_knock_has_elevated_5k_10k_band_energy():
+    # Loudness is deliberately not discriminative (seed-driven per-run gain).
+    # The knock ring at ~7 kHz must show up in the 5-10 kHz knock band.
+    from feature_extraction.signal_features import extract_band_features
+
     _, normal = simulate_engine("normal", seed=42)
     _, knock = simulate_engine("knock", seed=42)
+    fs = 25600
 
-    normal_rms = np.sqrt(np.mean(normal["knock_sensor"].to_numpy() ** 2))
-    knock_rms = np.sqrt(np.mean(knock["knock_sensor"].to_numpy() ** 2))
+    normal_r = extract_band_features(
+        normal["knock_sensor"].to_numpy(), fs)["knock_5k_10k_ratio"]
+    knock_r = extract_band_features(
+        knock["knock_sensor"].to_numpy(), fs)["knock_5k_10k_ratio"]
 
-    assert knock_rms > normal_rms * 1.5
+    assert knock_r > normal_r * 1.3
 
 
 def test_overheating_has_rising_temperature():
@@ -91,11 +103,18 @@ def test_misfire_has_attenuated_audio_rms():
     assert misfire_rms < normal_rms
 
 
-def test_valve_wear_has_elevated_vibration_rms():
+def test_valve_wear_has_elevated_mid_band_energy():
+    # Valve clicks sit at 3-5 kHz (mid band), NOT the 5-10 kHz knock band,
+    # which is what separates wear from knock.
+    from feature_extraction.signal_features import extract_band_features
+
     _, normal = simulate_engine("normal", seed=42)
     _, worn = simulate_engine("valve_train_wear", seed=42)
+    fs = 25600
 
-    normal_rms = np.sqrt(np.mean(normal["knock_sensor"].to_numpy() ** 2))
-    worn_rms = np.sqrt(np.mean(worn["knock_sensor"].to_numpy() ** 2))
+    normal_r = extract_band_features(
+        normal["knock_sensor"].to_numpy(), fs)["mid_1k_5k_ratio"]
+    worn_r = extract_band_features(
+        worn["knock_sensor"].to_numpy(), fs)["mid_1k_5k_ratio"]
 
-    assert worn_rms > normal_rms * 1.5
+    assert worn_r > normal_r * 1.3

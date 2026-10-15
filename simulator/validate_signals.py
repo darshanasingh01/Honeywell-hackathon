@@ -22,13 +22,18 @@ def main():
     rows = []
 
     for condition in CONDITIONS:
-        telemetry_path = DATA_DIR / f"{condition}_telemetry.csv"
-        waveform_path = DATA_DIR / f"{condition}_waveform.csv"
+        # Per-seed dataset (seed 0) produced by feature_extraction.generate_dataset,
+        # falling back to the legacy non-seed filenames from engine_simulator.main().
+        telemetry_path = DATA_DIR / f"{condition}_telemetry_s0.csv"
+        waveform_path = DATA_DIR / f"{condition}_waveform_s0.csv"
+        if not telemetry_path.exists() or not waveform_path.exists():
+            telemetry_path = DATA_DIR / f"{condition}_telemetry.csv"
+            waveform_path = DATA_DIR / f"{condition}_waveform.csv"
 
         if not telemetry_path.exists() or not waveform_path.exists():
             raise FileNotFoundError(
                 f"Missing CSV files for {condition}. "
-                "Run python simulator/engine_simulator.py first."
+                "Run python -m feature_extraction.generate_dataset first."
             )
 
         telemetry = pd.read_csv(telemetry_path)
