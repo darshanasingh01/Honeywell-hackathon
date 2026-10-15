@@ -33,3 +33,35 @@ def test_spectrogram_has_valid_dimensions():
     assert len(frequencies) > 0
     assert power.shape == (len(frequencies), len(times))
     assert frequencies.max() <= sample_rate / 2
+
+
+
+import pytest
+
+
+@pytest.mark.parametrize(
+    "signal",
+    [
+        np.ones(8),
+        np.ones((32, 2)),
+        np.full(32, np.nan),
+    ],
+)
+def test_fft_rejects_invalid_signals(signal):
+    with pytest.raises(ValueError):
+        frequency_spectrum(signal, 4000)
+
+
+@pytest.mark.parametrize("sample_rate", [0, -1])
+def test_fft_rejects_invalid_sample_rates(sample_rate):
+    with pytest.raises(ValueError):
+        frequency_spectrum(np.ones(32), sample_rate)
+
+
+def test_spectrogram_rejects_invalid_overlap():
+    with pytest.raises(ValueError):
+        time_frequency_spectrogram(
+            np.ones(1024),
+            4000,
+            overlap_fraction=1.0,
+        )
