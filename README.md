@@ -140,3 +140,35 @@ outputs.
 ---
 
 Honeywell Hackathon team project.
+
+## Dataset Generation and Validation
+
+Generate the default synthetic datasets for all five conditions:
+
+```bash
+python -m simulator.engine_simulator
+```
+
+The generator writes telemetry and waveform CSV files to `data/raw/`.
+The default settings are 10 seconds per condition, 10 Hz telemetry,
+4,000 Hz waveform sampling, and random seed 42.
+
+Validate the generated datasets and create summary metrics and diagnostic
+plots:
+
+```bash
+python simulator/validate_signals.py
+```
+
+The validation report is written to `data/processed/signal_validation.csv`,
+and diagnostic plots are written to `docs/plots/`.
+
+Run the automated tests:
+
+```bash
+python -m pytest -q
+```
+
+**Data disclaimer:** These generated files are synthetic examples. They
+must not be described as measured engine data or used as a substitute
+for validation on real engine recordings.
