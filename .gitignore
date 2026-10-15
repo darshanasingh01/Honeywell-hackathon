@@ -218,3 +218,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated synthetic datasets and validation outputs
+data/raw/
+data/processed/
+
+# Local backups
+*.backup
+simulator/engine_simulator_pre_ckp.py
+simulator/engine_simulator_pre_integration.py
+simulator/engine_simulator_v1.py
+
+# Python cache files
+__pycache__/
+*.py[cod]
+.pytest_cache/
