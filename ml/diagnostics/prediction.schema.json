@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://enginguard.invalid/schemas/prediction.schema.json",
+  "title": "EngineGuard Sensor Prediction",
+  "description": "Prediction envelope for the acoustic, vibration, and CKP sensors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "prediction_id", "event_id", "sensor_type", "status",
+    "engine_id", "session_id", "measurement_interval", "rpm", "anomaly",
+    "fault_prediction", "fault_probabilities", "signal_quality", "model_version",
+    "limitations", "error", "native_output"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "prediction_id": {"type": "string", "minLength": 1},
+    "event_id": {"type": ["string", "null"], "minLength": 1},
+    "sensor_type": {"enum": ["acoustic", "vibration", "ckp"]},
+    "status": {"enum": ["available", "unavailable", "error"]},
+    "engine_id": {"type": ["string", "null"], "minLength": 1},
+    "session_id": {"type": ["string", "null"], "minLength": 1},
+    "measurement_interval": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start_utc", "end_utc"],
+      "properties": {
+        "start_utc": {"type": ["string", "null"], "format": "date-time"},
+        "end_utc": {"type": ["string", "null"], "format": "date-time"}
+      },
+      "oneOf": [
+        {"properties": {"start_utc": {"type": "null"}, "end_utc": {"type": "null"}}},
+        {"properties": {"start_utc": {"type": "string"}, "end_utc": {"type": "string"}}}
+      ]
+    },
+    "rpm": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false,
+         "required": ["value", "confidence", "source"],
+         "properties": {
+           "value": {"type": "number", "exclusiveMinimum": 0},
+           "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+           "source": {"type": "string", "minLength": 1}
+         }}
+      ]
+    },
+    "anomaly": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false,
+         "required": ["score", "threshold", "is_unusual", "score_name"],
+         "properties": {
+           "score": {"type": "number"}, "threshold": {"type": "number"},
+           "is_unusual": {"type": "boolean"}, "score_name": {"type": "string", "minLength": 1}
+         }}
+      ]
+    },
+    "fault_prediction": {"type": ["string", "null"], "minLength": 1},
+    "fault_probabilities": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "minProperties": 1,
+         "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+      ]
+    },
+    "signal_quality": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "metrics"],
+      "properties": {
+        "status": {"enum": ["good", "poor", "not_assessed", "unavailable"]},
+        "metrics": {"type": "object"}
+      }
+    },
+    "model_version": {"type": ["string", "null"], "minLength": 1},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false,
+         "required": ["code", "message"],
+         "properties": {"code": {"type": "string", "minLength": 1}, "message": {"type": "string", "minLength": 1}}}
+      ]
+    },
+    "native_output": {"type": ["object", "null"]}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "error"}}, "required": ["status"]},
+     "then": {"properties": {"error": {"type": "object"}, "rpm": {"type": "null"}, "anomaly": {"type": "null"}, "fault_prediction": {"type": "null"}, "fault_probabilities": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"const": "unavailable"}}, "required": ["status"]},
+     "then": {"properties": {"error": {"type": "null"}, "rpm": {"type": "null"}, "anomaly": {"type": "null"}, "fault_prediction": {"type": "null"}, "fault_probabilities": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"const": "available"}}, "required": ["status"]},
+     "then": {"properties": {"error": {"type": "null"}}}}
+  ]
+}
