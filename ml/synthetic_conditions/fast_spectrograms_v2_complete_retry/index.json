@@ -1,0 +1,180 @@
+{
+  "format_version": "engineguard-fast-spectrogram/1",
+  "data_kind": "synthetic_simulated_engine_conditions",
+  "real_engine_measurements": false,
+  "source_dataset": "ml/datasets/synthetic_conditions_v2/training",
+  "source_dataset_features_sha256": "7f5f02e18533ad77bc01885a7d1370710e8cb702cdcb354cad182caf038ba37a",
+  "source_verification_status": "PASS",
+  "sample_rate_hz": 25600,
+  "stft": {
+    "window": "hann",
+    "nperseg": 1024,
+    "noverlap": 768,
+    "nfft": 1024,
+    "boundary": null,
+    "padded": false
+  },
+  "channels": [
+    "microphone",
+    "knock",
+    "accelerometer_x",
+    "accelerometer_y",
+    "accelerometer_z"
+  ],
+  "exports": {
+    "normal": {
+      "path": "normal_window0.npz",
+      "sha256": "cd8a34eb9e24021e7a7ba95016529b5f372a72947ee75b32d093c6d00ee7a23d",
+      "run_id": "v2_train_normal_s3200",
+      "window_id": 0,
+      "condition_label": "normal",
+      "array_shapes": {
+        "microphone": [
+          513,
+          47
+        ],
+        "knock": [
+          513,
+          47
+        ],
+        "accelerometer_x": [
+          513,
+          47
+        ],
+        "accelerometer_y": [
+          513,
+          47
+        ],
+        "accelerometer_z": [
+          513,
+          47
+        ]
+      },
+      "feature_match_max_abs_error": 0.0
+    },
+    "knock": {
+      "path": "knock_window0.npz",
+      "sha256": "4f76c5a2e35e31baa950313a4c9cd15bc56e7a9a6710ef60cb2601475f3e847c",
+      "run_id": "v2_train_knock_s3200",
+      "window_id": 0,
+      "condition_label": "knock",
+      "array_shapes": {
+        "microphone": [
+          513,
+          47
+        ],
+        "knock": [
+          513,
+          47
+        ],
+        "accelerometer_x": [
+          513,
+          47
+        ],
+        "accelerometer_y": [
+          513,
+          47
+        ],
+        "accelerometer_z": [
+          513,
+          47
+        ]
+      },
+      "feature_match_max_abs_error": 0.0
+    },
+    "misfire": {
+      "path": "misfire_window0.npz",
+      "sha256": "26638705de53c9c17f820e1a018d2140ba8a56f54208c7931fcda1cd706cebbe",
+      "run_id": "v2_train_misfire_s3200",
+      "window_id": 0,
+      "condition_label": "misfire",
+      "array_shapes": {
+        "microphone": [
+          513,
+          47
+        ],
+        "knock": [
+          513,
+          47
+        ],
+        "accelerometer_x": [
+          513,
+          47
+        ],
+        "accelerometer_y": [
+          513,
+          47
+        ],
+        "accelerometer_z": [
+          513,
+          47
+        ]
+      },
+      "feature_match_max_abs_error": 0.0
+    },
+    "overheating": {
+      "path": "overheating_window0.npz",
+      "sha256": "7eaabf3d0515d1bf4f571dcf7bee12635ebd4ec31bc8ef7acae61e05c50d7114",
+      "run_id": "v2_train_overheating_s3200",
+      "window_id": 0,
+      "condition_label": "overheating",
+      "array_shapes": {
+        "microphone": [
+          513,
+          47
+        ],
+        "knock": [
+          513,
+          47
+        ],
+        "accelerometer_x": [
+          513,
+          47
+        ],
+        "accelerometer_y": [
+          513,
+          47
+        ],
+        "accelerometer_z": [
+          513,
+          47
+        ]
+      },
+      "feature_match_max_abs_error": 0.0
+    },
+    "valve_train_wear": {
+      "path": "valve_train_wear_window0.npz",
+      "sha256": "ad31ae6137ba5415cd1300c126619b167041c78be6689a757119b1993e15a6ae",
+      "run_id": "v2_train_valve_train_wear_s3200",
+      "window_id": 0,
+      "condition_label": "valve_train_wear",
+      "array_shapes": {
+        "microphone": [
+          513,
+          47
+        ],
+        "knock": [
+          513,
+          47
+        ],
+        "accelerometer_x": [
+          513,
+          47
+        ],
+        "accelerometer_y": [
+          513,
+          47
+        ],
+        "accelerometer_z": [
+          513,
+          47
+        ]
+      },
+      "feature_match_max_abs_error": 0.0
+    }
+  },
+  "limitations": [
+    "Synthetic-only simulator-derived signatures.",
+    "No waveform was fabricated from engineered features."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "format_version": "engineguard-sensor-export/1",
+  "data_kind": "synthetic_simulated_engine_conditions",
+  "real_engine_measurements": false,
+  "source_dataset": "ml/datasets/synthetic_conditions_v2/training",
+  "source_dataset_features_sha256": "7f5f02e18533ad77bc01885a7d1370710e8cb702cdcb354cad182caf038ba37a",
+  "source_verification_status": "PASS",
+  "sensor_group_count": 10,
+  "primary_sensor_group_count": 9,
+  "supporting_sensor_group": "accelerometer",
+  "exports": {
+    "normal": {
+      "path": "normal_window0.json",
+      "sha256": "b559936148fb55bfcee832ca60aff05470ea532de36a56cce40f98c9a242b3cb",
+      "run_id": "v2_train_normal_s3200",
+      "window_id": 0,
+      "condition_label": "normal"
+    },
+    "knock": {
+      "path": "knock_window0.json",
+      "sha256": "8ce89c62b05695636c3eecebec8f622f2f781b2614b2f1482364c2ab3f74a941",
+      "run_id": "v2_train_knock_s3200",
+      "window_id": 0,
+      "condition_label": "knock"
+    },
+    "misfire": {
+      "path": "misfire_window0.json",
+      "sha256": "a7b355ffa3328bccc369fa044b89c1f122479dec3085da825541bdd5cd1cc890",
+      "run_id": "v2_train_misfire_s3200",
+      "window_id": 0,
+      "condition_label": "misfire"
+    },
+    "overheating": {
+      "path": "overheating_window0.json",
+      "sha256": "5d3801742a3492600645c63376b9f595a9b928ff7a07afe461219293ec315a75",
+      "run_id": "v2_train_overheating_s3200",
+      "window_id": 0,
+      "condition_label": "overheating"
+    },
+    "valve_train_wear": {
+      "path": "valve_train_wear_window0.json",
+      "sha256": "c104c3719f5706b262e4d8895a5ad388d30433d7113fbb99a89c14c3cdccf084",
+      "run_id": "v2_train_valve_train_wear_s3200",
+      "window_id": 0,
+      "condition_label": "valve_train_wear"
+    }
+  },
+  "missing_evidence": {
+    "raw_microphone_waveform": true,
+    "raw_knock_waveform": true,
+    "raw_accelerometer_waveform": true
+  },
+  "limitations": [
+    "Synthetic-only export.",
+    "Raw fast waveforms were not retained in the source handoff."
+  ]
+}

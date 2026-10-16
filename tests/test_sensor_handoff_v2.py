@@ -4,7 +4,7 @@ import tempfile
 import unittest
 
 from ml.synthetic_conditions.export_sensor_v2 import (
-    DEFAULT_DATASET, REQUESTED_CONDITIONS, SENSOR_GROUPS, export_samples,
+    ALL_CONDITIONS, DEFAULT_DATASET, REQUESTED_CONDITIONS, SENSOR_GROUPS, export_samples,
 )
 
 
@@ -38,6 +38,21 @@ class SensorHandoffV2Tests(unittest.TestCase):
             index = export_samples(DEFAULT_DATASET, Path(temp) / "export")
             for name in ("raw_microphone_waveform", "raw_knock_waveform", "raw_accelerometer_waveform"):
                 self.assertTrue(index["missing_evidence"][name])
+
+    def test_all_five_conditions_can_be_exported_with_stable_identifiers(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "all_conditions"
+            index = export_samples(DEFAULT_DATASET, output, ALL_CONDITIONS)
+            self.assertEqual(set(index["exports"]), set(ALL_CONDITIONS))
+            self.assertEqual(len(index["exports"]), 5)
+            for condition in ALL_CONDITIONS:
+                item = index["exports"][condition]
+                payload = json.loads((output / item["path"]).read_text())
+                self.assertEqual(payload["condition_label"], condition)
+                self.assertEqual(payload["run_id"], item["run_id"])
+                self.assertEqual(payload["window_id"], item["window_id"])
+                self.assertEqual(payload["window_id"], 0)
+                self.assertEqual(payload["provenance"]["source_id"], payload["run_id"])
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ DEFAULT_DATASET = Path("ml/datasets/synthetic_conditions_v2/training")
 DEFAULT_OUTPUT = Path("ml/synthetic_conditions/sensor_exports_v2")
 EXPORT_VERSION = "engineguard-sensor-export/1"
 REQUESTED_CONDITIONS = ("normal", "misfire", "overheating")
+ALL_CONDITIONS = tuple(MANIFEST["class_labels"])
 
 SENSOR_GROUPS = {
     "microphone": {"sample_rate_hz": 25600, "units": "synthetic waveform amplitude",
@@ -134,8 +135,8 @@ def export_samples(dataset=DEFAULT_DATASET, output=DEFAULT_OUTPUT,
     if output.exists():
         raise FileExistsError(f"refusing to overwrite existing export directory: {output}")
     conditions = tuple(conditions)
-    if set(conditions) != set(REQUESTED_CONDITIONS):
-        raise ValueError("export requires exactly normal, misfire, and overheating")
+    if not conditions or len(set(conditions)) != len(conditions) or not set(conditions).issubset(ALL_CONDITIONS):
+        raise ValueError(f"conditions must be a nonempty subset of {ALL_CONDITIONS}")
     # Full read-only source verification; no producer or dataset generation.
     verification = verify_directory(dataset)
     manifest = json.loads((dataset / "manifest.json").read_text(encoding="utf-8"))
@@ -171,8 +172,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--conditions", nargs="+", choices=ALL_CONDITIONS,
+                        default=REQUESTED_CONDITIONS,
+                        help="conditions to export; defaults to the legacy three-condition set")
     args = parser.parse_args()
-    print(json.dumps(export_samples(args.dataset, args.output), indent=2))
+    print(json.dumps(export_samples(args.dataset, args.output, args.conditions), indent=2))
 
 
 if __name__ == "__main__":
