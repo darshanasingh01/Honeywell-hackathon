@@ -1,0 +1,1582 @@
+{
+  "report_version": "1.0",
+  "model_version": "synthetic-conditions-167-v2-baseline-v1",
+  "schema_version": "engineguard.ml-features/167-v2.1",
+  "source_commit": "0ade8c2326d76bf104ba42613f1ea771558c6af8",
+  "dataset_provenance": {
+    "data_kind": "synthetic_simulated_engine_conditions",
+    "real_engine_measurements": false,
+    "fault_labels_are_simulated_conditions": true,
+    "producer_version": "engineguard-synthetic-producer-v2.1"
+  },
+  "dataset": {
+    "source_path": "ml/datasets/synthetic_conditions_v2/training",
+    "features_sha256": "7f5f02e18533ad77bc01885a7d1370710e8cb702cdcb354cad182caf038ba37a",
+    "rows": 1170,
+    "feature_count": 167,
+    "metadata_columns_excluded": [
+      "run_id",
+      "window_id",
+      "label",
+      "t_start",
+      "t_end",
+      "available_microphone",
+      "available_knock",
+      "available_ckp",
+      "available_engine_rpm",
+      "available_engine_load",
+      "available_map",
+      "available_throttle",
+      "available_coolant",
+      "available_fuel_trims",
+      "available_ignition_timing",
+      "available_accelerometer",
+      "ckp_signal_quality_status",
+      "map_signal_quality_status",
+      "engine_load_signal_quality_status",
+      "data_kind",
+      "source_id",
+      "source_commit",
+      "processor_revision",
+      "timestamp_resolution_s"
+    ],
+    "label_distribution": {
+      "normal": 234,
+      "knock": 234,
+      "misfire": 234,
+      "overheating": 234,
+      "valve_train_wear": 234
+    },
+    "unique_run_groups": 30,
+    "windows_per_run": 39,
+    "handoff_verification": {
+      "status": "PASS",
+      "synthetic_only": true,
+      "rows": 1170,
+      "feature_count": 167,
+      "metadata_count": 24,
+      "run_count": 30,
+      "class_balance": {
+        "knock": 234,
+        "misfire": 234,
+        "normal": 234,
+        "overheating": 234,
+        "valve_train_wear": 234
+      },
+      "runs_per_class": {
+        "knock": 6,
+        "misfire": 6,
+        "normal": 6,
+        "overheating": 6,
+        "valve_train_wear": 6
+      },
+      "all_features_finite": true,
+      "all_rows_schema_valid": true,
+      "unexpected_ckp_gaps": 0,
+      "schema_version": "engineguard.ml-features/167-v2.1",
+      "classifier_trained": false,
+      "minimum_timestamp_ticks_per_tooth": 48.00000000000359,
+      "source_hashes_and_saved_evidence_verified": true,
+      "five_fold_group_class_coverage": "PASS; no estimator fitted"
+    }
+  },
+  "evaluation": {
+    "method": "5-fold GroupKFold",
+    "n_splits": 5,
+    "group_column": "run_id",
+    "random_window_split_used": false,
+    "run_ids_disjoint": true,
+    "fold_class_coverage_required": "all five classes",
+    "preprocessing_fitted_within_training_fold": true
+  },
+  "models": {
+    "random_forest": {
+      "configuration": {
+        "n_estimators": 300,
+        "max_features": "sqrt",
+        "class_weight": "balanced",
+        "random_state": 42,
+        "n_jobs": 1
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3204",
+            "v2_train_misfire_s3203",
+            "v2_train_normal_s3202",
+            "v2_train_overheating_s3201",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                78
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3203",
+            "v2_train_misfire_s3202",
+            "v2_train_normal_s3201",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3204"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                78,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 3,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3202",
+            "v2_train_misfire_s3201",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3204",
+            "v2_train_valve_train_wear_s3203"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                78,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 4,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3201",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3204",
+            "v2_train_overheating_s3203",
+            "v2_train_valve_train_wear_s3202"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                78,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 5,
+          "train_run_ids": [
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3204",
+            "v2_train_normal_s3203",
+            "v2_train_overheating_s3202",
+            "v2_train_valve_train_wear_s3201"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                78,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        }
+      ],
+      "mean_fold_macro_f1": 1.0,
+      "std_fold_macro_f1": 0.0,
+      "out_of_fold_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "balanced_accuracy": 1.0,
+        "confusion_matrix": [
+          [
+            234,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            234,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            234,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            234,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            234
+          ]
+        ],
+        "class_order": [
+          "normal",
+          "knock",
+          "misfire",
+          "overheating",
+          "valve_train_wear"
+        ],
+        "per_class": {
+          "normal": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "knock": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "misfire": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "overheating": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "valve_train_wear": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          }
+        },
+        "per_class_recall": {
+          "normal": 1.0,
+          "knock": 1.0,
+          "misfire": 1.0,
+          "overheating": 1.0,
+          "valve_train_wear": 1.0
+        }
+      }
+    },
+    "scaled_rbf_svm": {
+      "configuration": {
+        "scaler": "StandardScaler",
+        "kernel": "rbf",
+        "C": 1.0,
+        "gamma": "scale",
+        "class_weight": "balanced",
+        "probability": false
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3204",
+            "v2_train_misfire_s3203",
+            "v2_train_normal_s3202",
+            "v2_train_overheating_s3201",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9961780318497345,
+            "balanced_accuracy": 0.9974358974358974,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                77
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 0.9871794871794872,
+                "f1": 0.9935483870967742,
+                "support": 78
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 0.9871794871794872
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3203",
+            "v2_train_misfire_s3202",
+            "v2_train_normal_s3201",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3204"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 0.9743589743589743,
+            "macro_f1": 0.9777142857142858,
+            "balanced_accuracy": 0.9846153846153847,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                6,
+                0,
+                0,
+                72,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 0.8666666666666667,
+                "recall": 1.0,
+                "f1": 0.9285714285714286,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9230769230769231,
+                "f1": 0.96,
+                "support": 78
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 0.9230769230769231,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 3,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3204",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3202",
+            "v2_train_misfire_s3201",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3204",
+            "v2_train_valve_train_wear_s3203"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 0.9914529914529915,
+            "macro_f1": 0.9923076923076923,
+            "balanced_accuracy": 0.9923076923076923,
+            "confusion_matrix": [
+              [
+                77,
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                38,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 0.9871794871794872,
+                "recall": 0.9871794871794872,
+                "f1": 0.9871794871794872,
+                "support": 78
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 0.9743589743589743,
+                "recall": 0.9743589743589743,
+                "f1": 0.9743589743589743,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 0.9871794871794872,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 0.9743589743589743,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 4,
+          "train_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3204",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3203",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3202",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3201",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3201",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3204",
+            "v2_train_overheating_s3203",
+            "v2_train_valve_train_wear_s3202"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 1.0,
+            "macro_f1": 1.0,
+            "balanced_accuracy": 1.0,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                78,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 1.0,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        },
+        {
+          "fold": 5,
+          "train_run_ids": [
+            "v2_train_knock_s3201",
+            "v2_train_knock_s3202",
+            "v2_train_knock_s3203",
+            "v2_train_knock_s3204",
+            "v2_train_misfire_s3200",
+            "v2_train_misfire_s3201",
+            "v2_train_misfire_s3202",
+            "v2_train_misfire_s3203",
+            "v2_train_misfire_s3205",
+            "v2_train_normal_s3200",
+            "v2_train_normal_s3201",
+            "v2_train_normal_s3202",
+            "v2_train_normal_s3204",
+            "v2_train_normal_s3205",
+            "v2_train_overheating_s3200",
+            "v2_train_overheating_s3201",
+            "v2_train_overheating_s3203",
+            "v2_train_overheating_s3204",
+            "v2_train_overheating_s3205",
+            "v2_train_valve_train_wear_s3200",
+            "v2_train_valve_train_wear_s3202",
+            "v2_train_valve_train_wear_s3203",
+            "v2_train_valve_train_wear_s3204",
+            "v2_train_valve_train_wear_s3205"
+          ],
+          "validation_run_ids": [
+            "v2_train_knock_s3200",
+            "v2_train_knock_s3205",
+            "v2_train_misfire_s3204",
+            "v2_train_normal_s3203",
+            "v2_train_overheating_s3202",
+            "v2_train_valve_train_wear_s3201"
+          ],
+          "run_id_overlap": false,
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9961780318497346,
+            "balanced_accuracy": 0.9974358974358974,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                77,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "per_class": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 0.9871794871794872,
+                "f1": 0.9935483870967742,
+                "support": 78
+              },
+              "misfire": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            },
+            "per_class_recall": {
+              "normal": 1.0,
+              "knock": 0.9871794871794872,
+              "misfire": 1.0,
+              "overheating": 1.0,
+              "valve_train_wear": 1.0
+            }
+          }
+        }
+      ],
+      "mean_fold_macro_f1": 0.9924756083442894,
+      "std_fold_macro_f1": 0.007771192842778737,
+      "out_of_fold_metrics": {
+        "accuracy": 0.9914529914529915,
+        "macro_f1": 0.9914643525709261,
+        "balanced_accuracy": 0.9914529914529915,
+        "confusion_matrix": [
+          [
+            233,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            233,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            234,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            0,
+            227,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            233
+          ]
+        ],
+        "class_order": [
+          "normal",
+          "knock",
+          "misfire",
+          "overheating",
+          "valve_train_wear"
+        ],
+        "per_class": {
+          "normal": {
+            "precision": 0.966804979253112,
+            "recall": 0.9957264957264957,
+            "f1": 0.9810526315789474,
+            "support": 234
+          },
+          "knock": {
+            "precision": 1.0,
+            "recall": 0.9957264957264957,
+            "f1": 0.9978586723768736,
+            "support": 234
+          },
+          "misfire": {
+            "precision": 0.9957446808510638,
+            "recall": 1.0,
+            "f1": 0.997867803837953,
+            "support": 234
+          },
+          "overheating": {
+            "precision": 0.9956140350877193,
+            "recall": 0.9700854700854701,
+            "f1": 0.9826839826839827,
+            "support": 234
+          },
+          "valve_train_wear": {
+            "precision": 1.0,
+            "recall": 0.9957264957264957,
+            "f1": 0.9978586723768736,
+            "support": 234
+          }
+        },
+        "per_class_recall": {
+          "normal": 0.9957264957264957,
+          "knock": 0.9957264957264957,
+          "misfire": 1.0,
+          "overheating": 0.9700854700854701,
+          "valve_train_wear": 0.9957264957264957
+        }
+      }
+    }
+  },
+  "selection": {
+    "criterion": "highest mean grouped-fold macro F1",
+    "selected_model": "random_forest",
+    "selected_mean_fold_macro_f1": 1.0
+  },
+  "v1_comparison": {
+    "status": "descriptive_only",
+    "v1_model_version": "synthetic-conditions-136-baseline-v1",
+    "v1_selected_model": "random_forest",
+    "v1_grouped_cv_macro_f1": 1.0,
+    "v1_grouped_cv_accuracy": 1.0,
+    "interpretation": "Different contracts/producers; not a controlled comparison and no improvement claim."
+  },
+  "limitations": [
+    "All examples and labels are synthetic simulator outputs, not real engine recordings.",
+    "Grouped CV measures held-out simulator runs, not independent physical engines.",
+    "V2 changes the feature contract and producer, so V1/V2 scores are descriptive only; no controlled improvement claim is made.",
+    "Scores are model-specific and are not calibrated fault probabilities.",
+    "MAP is an illustrative surrogate and CKP follows the declared synthetic trajectory."
+  ],
+  "artifacts": {
+    "model_path": "ml/saved_models/synthetic_conditions_167_v2_baseline.joblib",
+    "model_sha256": "01f693c753d3439f0eb4b7660aac4d95ab339529d4f5a53bc4435c2e11966db3"
+  },
+  "report_sha256": "7ae66ca4373926dcab65a2b5e30b5669e87ecbb25e62b2861ab4581181b0615b"
+}

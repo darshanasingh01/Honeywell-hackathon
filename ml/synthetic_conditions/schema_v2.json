@@ -1,0 +1,2663 @@
+{
+  "schema_version": "engineguard.ml-features/167-v2.1",
+  "schema_name": "EngineGuard AI nine-sensor synthetic feature contract V2",
+  "source_contract": {
+    "repository": "darshanasingh01/Honeywell-hackathon",
+    "branch": "features-sensors",
+    "commit": "0ade8c2326d76bf104ba42613f1ea771558c6af8",
+    "role": "approved V1 reference only, not a V2 producer revision"
+  },
+  "data_scope": "V2 feature contract and synthetic-only prototyping; no V2 training data currently exists.",
+  "class_labels": [
+    "normal",
+    "knock",
+    "misfire",
+    "overheating",
+    "valve_train_wear"
+  ],
+  "metadata_columns": [
+    "run_id",
+    "window_id",
+    "label",
+    "t_start",
+    "t_end",
+    "available_microphone",
+    "available_knock",
+    "available_ckp",
+    "available_engine_rpm",
+    "available_engine_load",
+    "available_map",
+    "available_throttle",
+    "available_coolant",
+    "available_fuel_trims",
+    "available_ignition_timing",
+    "available_accelerometer",
+    "ckp_signal_quality_status",
+    "map_signal_quality_status",
+    "engine_load_signal_quality_status",
+    "data_kind",
+    "source_id",
+    "source_commit",
+    "processor_revision",
+    "timestamp_resolution_s"
+  ],
+  "sensor_groups": [
+    {
+      "name": "microphone",
+      "primary": true,
+      "source": "microphone_audio",
+      "sample_rate_hz": 25600,
+      "units": "synthetic waveform amplitude"
+    },
+    {
+      "name": "knock",
+      "primary": true,
+      "source": "knock_sensor",
+      "sample_rate_hz": 25600,
+      "units": "synthetic waveform amplitude"
+    },
+    {
+      "name": "ckp",
+      "primary": true,
+      "source": "timestamped 60-2 tooth edges",
+      "sample_rate_hz": null,
+      "minimum_samples_per_tooth": 10,
+      "units": "seconds, rpm, rad/s, counts, fractions"
+    },
+    {
+      "name": "engine_rpm",
+      "primary": true,
+      "source": "OBD PID 0x0C simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "rpm"
+    },
+    {
+      "name": "engine_load",
+      "primary": true,
+      "source": "OBD PID 0x04 simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "fraction V1 plus percent V2"
+    },
+    {
+      "name": "map",
+      "primary": true,
+      "source": "OBD PID 0x0B simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "kPa absolute"
+    },
+    {
+      "name": "throttle",
+      "primary": true,
+      "source": "OBD PID 0x11 simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "percent"
+    },
+    {
+      "name": "coolant",
+      "primary": true,
+      "source": "OBD PID 0x05 simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "degC"
+    },
+    {
+      "name": "fuel_trims",
+      "primary": true,
+      "source": "OBD PIDs 0x06 and 0x07 simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "percent"
+    },
+    {
+      "name": "ignition_timing",
+      "primary": true,
+      "source": "OBD PID 0x0E simulated CAN",
+      "sample_rate_hz": 10,
+      "units": "degrees BTDC"
+    },
+    {
+      "name": "accelerometer",
+      "primary": false,
+      "source": "accel_x, accel_y, accel_z",
+      "sample_rate_hz": 25600,
+      "units": "synthetic waveform amplitude"
+    }
+  ],
+  "metadata_semantics": {
+    "availability": "Boolean acquisition indicators. False means unavailable and corresponding features must be null/NaN; a numeric zero is a valid measurement when availability is true.",
+    "ckp_signal_quality_status": [
+      "good",
+      "poor_quality",
+      "unavailable"
+    ],
+    "map_signal_quality_status": [
+      "good",
+      "stale",
+      "invalid",
+      "insufficient_samples",
+      "unavailable"
+    ],
+    "engine_load_signal_quality_status": [
+      "good",
+      "stale",
+      "invalid",
+      "insufficient_samples",
+      "unavailable"
+    ],
+    "data_kind": [
+      "synthetic_simulated_engine_conditions"
+    ],
+    "source_id": "Required nonempty scenario/run provenance identifier.",
+    "source_commit": "Required nonempty exact source revision identifier."
+  },
+  "feature_count": 167,
+  "feature_columns": [
+    "mic_std",
+    "mic_rms",
+    "mic_peak",
+    "mic_crest_factor",
+    "mic_kurtosis",
+    "mic_zero_crossing_rate",
+    "mic_dominant_frequency_hz",
+    "mic_spectral_centroid_hz",
+    "mic_low_0_1k_energy",
+    "mic_low_0_1k_ratio",
+    "mic_mid_1k_5k_energy",
+    "mic_mid_1k_5k_ratio",
+    "mic_knock_5k_10k_energy",
+    "mic_knock_5k_10k_ratio",
+    "mic_env_mean",
+    "mic_env_std",
+    "mic_env_peak",
+    "mic_env_peak_to_mean",
+    "mic_env_repetition_hz",
+    "knock_std",
+    "knock_rms",
+    "knock_peak",
+    "knock_crest_factor",
+    "knock_kurtosis",
+    "knock_zero_crossing_rate",
+    "knock_dominant_frequency_hz",
+    "knock_spectral_centroid_hz",
+    "knock_low_0_1k_energy",
+    "knock_low_0_1k_ratio",
+    "knock_mid_1k_5k_energy",
+    "knock_mid_1k_5k_ratio",
+    "knock_knock_5k_10k_energy",
+    "knock_knock_5k_10k_ratio",
+    "knock_env_mean",
+    "knock_env_std",
+    "knock_env_peak",
+    "knock_env_peak_to_mean",
+    "knock_env_repetition_hz",
+    "accel_x_std",
+    "accel_x_rms",
+    "accel_x_peak",
+    "accel_x_crest_factor",
+    "accel_x_kurtosis",
+    "accel_x_zero_crossing_rate",
+    "accel_x_dominant_frequency_hz",
+    "accel_x_spectral_centroid_hz",
+    "accel_x_low_0_1k_energy",
+    "accel_x_low_0_1k_ratio",
+    "accel_x_mid_1k_5k_energy",
+    "accel_x_mid_1k_5k_ratio",
+    "accel_x_knock_5k_10k_energy",
+    "accel_x_knock_5k_10k_ratio",
+    "accel_x_env_mean",
+    "accel_x_env_std",
+    "accel_x_env_peak",
+    "accel_x_env_peak_to_mean",
+    "accel_x_env_repetition_hz",
+    "accel_y_std",
+    "accel_y_rms",
+    "accel_y_peak",
+    "accel_y_crest_factor",
+    "accel_y_kurtosis",
+    "accel_y_zero_crossing_rate",
+    "accel_y_dominant_frequency_hz",
+    "accel_y_spectral_centroid_hz",
+    "accel_y_low_0_1k_energy",
+    "accel_y_low_0_1k_ratio",
+    "accel_y_mid_1k_5k_energy",
+    "accel_y_mid_1k_5k_ratio",
+    "accel_y_knock_5k_10k_energy",
+    "accel_y_knock_5k_10k_ratio",
+    "accel_y_env_mean",
+    "accel_y_env_std",
+    "accel_y_env_peak",
+    "accel_y_env_peak_to_mean",
+    "accel_y_env_repetition_hz",
+    "accel_z_std",
+    "accel_z_rms",
+    "accel_z_peak",
+    "accel_z_crest_factor",
+    "accel_z_kurtosis",
+    "accel_z_zero_crossing_rate",
+    "accel_z_dominant_frequency_hz",
+    "accel_z_spectral_centroid_hz",
+    "accel_z_low_0_1k_energy",
+    "accel_z_low_0_1k_ratio",
+    "accel_z_mid_1k_5k_energy",
+    "accel_z_mid_1k_5k_ratio",
+    "accel_z_knock_5k_10k_energy",
+    "accel_z_knock_5k_10k_ratio",
+    "accel_z_env_mean",
+    "accel_z_env_std",
+    "accel_z_env_peak",
+    "accel_z_env_peak_to_mean",
+    "accel_z_env_repetition_hz",
+    "crank_rpm",
+    "crank_rpm_std",
+    "crank_interval_cv",
+    "tel_engine_rpm_mean",
+    "tel_engine_rpm_std",
+    "tel_engine_rpm_min",
+    "tel_engine_rpm_max",
+    "tel_engine_rpm_slope",
+    "tel_coolant_temp_c_mean",
+    "tel_coolant_temp_c_std",
+    "tel_coolant_temp_c_min",
+    "tel_coolant_temp_c_max",
+    "tel_coolant_temp_c_slope",
+    "tel_throttle_pct_mean",
+    "tel_throttle_pct_std",
+    "tel_throttle_pct_min",
+    "tel_throttle_pct_max",
+    "tel_throttle_pct_slope",
+    "tel_engine_load_mean",
+    "tel_engine_load_std",
+    "tel_engine_load_min",
+    "tel_engine_load_max",
+    "tel_engine_load_slope",
+    "tel_stft_pct_mean",
+    "tel_stft_pct_std",
+    "tel_stft_pct_min",
+    "tel_stft_pct_max",
+    "tel_stft_pct_slope",
+    "tel_ltft_pct_mean",
+    "tel_ltft_pct_std",
+    "tel_ltft_pct_min",
+    "tel_ltft_pct_max",
+    "tel_ltft_pct_slope",
+    "tel_ignition_timing_mean",
+    "tel_ignition_timing_std",
+    "tel_ignition_timing_min",
+    "tel_ignition_timing_max",
+    "tel_ignition_timing_slope",
+    "knock_cycle_intensity_mean",
+    "knock_cycle_intensity_max",
+    "knock_cycle_pct_knocking",
+    "tel_map_kpa_mean",
+    "tel_map_kpa_std",
+    "tel_map_kpa_min",
+    "tel_map_kpa_max",
+    "tel_map_kpa_slope",
+    "tel_engine_load_pct_mean",
+    "tel_engine_load_pct_std",
+    "tel_engine_load_pct_min",
+    "tel_engine_load_pct_max",
+    "tel_engine_load_pct_slope",
+    "ckp_tooth_period_s_mean",
+    "ckp_tooth_period_s_std",
+    "ckp_tooth_period_s_cv",
+    "ckp_tooth_rpm_mean",
+    "ckp_tooth_rpm_std",
+    "ckp_tooth_rpm_min",
+    "ckp_tooth_rpm_max",
+    "ckp_tooth_rpm_cv",
+    "ckp_tooth_rpm_p2p",
+    "ckp_cycle_rpm_mean",
+    "ckp_cycle_rpm_std",
+    "ckp_cycle_rpm_min",
+    "ckp_cycle_rpm_max",
+    "ckp_cycle_rpm_cv",
+    "ckp_angular_speed_mean_rad_s",
+    "ckp_angular_speed_std_rad_s",
+    "ckp_angular_speed_cv",
+    "ckp_valid_tooth_fraction",
+    "ckp_expected_gap_count",
+    "ckp_unexpected_gap_count",
+    "ckp_min_samples_per_tooth"
+  ],
+  "feature_specs": {
+    "mic_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_rms": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_crest_factor": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_kurtosis": {
+      "units": "dimensionless_fisher_kurtosis",
+      "expected_range": [
+        -2,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_zero_crossing_rate": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_dominant_frequency_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_spectral_centroid_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_low_0_1k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_low_0_1k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_mid_1k_5k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_mid_1k_5k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_knock_5k_10k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_knock_5k_10k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_env_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_env_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_env_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_env_peak_to_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "mic_env_repetition_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "microphone"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_rms": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_crest_factor": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_kurtosis": {
+      "units": "dimensionless_fisher_kurtosis",
+      "expected_range": [
+        -2,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_zero_crossing_rate": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_dominant_frequency_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_spectral_centroid_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_low_0_1k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_low_0_1k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_mid_1k_5k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_mid_1k_5k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_knock_5k_10k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_knock_5k_10k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_env_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_env_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_env_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_env_peak_to_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_env_repetition_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "knock"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_rms": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_crest_factor": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_kurtosis": {
+      "units": "dimensionless_fisher_kurtosis",
+      "expected_range": [
+        -2,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_zero_crossing_rate": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_dominant_frequency_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_spectral_centroid_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_low_0_1k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_low_0_1k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_mid_1k_5k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_mid_1k_5k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_knock_5k_10k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_knock_5k_10k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_env_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_env_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_env_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_env_peak_to_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_x_env_repetition_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_rms": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_crest_factor": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_kurtosis": {
+      "units": "dimensionless_fisher_kurtosis",
+      "expected_range": [
+        -2,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_zero_crossing_rate": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_dominant_frequency_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_spectral_centroid_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_low_0_1k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_low_0_1k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_mid_1k_5k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_mid_1k_5k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_knock_5k_10k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_knock_5k_10k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_env_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_env_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_env_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_env_peak_to_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_y_env_repetition_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_rms": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_crest_factor": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_kurtosis": {
+      "units": "dimensionless_fisher_kurtosis",
+      "expected_range": [
+        -2,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_zero_crossing_rate": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_dominant_frequency_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_spectral_centroid_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_low_0_1k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_low_0_1k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_mid_1k_5k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_mid_1k_5k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_knock_5k_10k_energy": {
+      "units": "simulator_amplitude_squared",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_knock_5k_10k_ratio": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_env_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_env_std": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_env_peak": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_env_peak_to_mean": {
+      "units": "simulator_amplitude",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "accel_z_env_repetition_hz": {
+      "units": "Hz",
+      "expected_range": [
+        0,
+        12800
+      ],
+      "requires_available_groups": [
+        "accelerometer"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "crank_rpm": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "crank_rpm_std": {
+      "units": "rpm",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "crank_interval_cv": {
+      "units": "dimensionless",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_rpm_mean": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "engine_rpm"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_rpm_std": {
+      "units": "rpm",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_rpm"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_rpm_min": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "engine_rpm"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_rpm_max": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "engine_rpm"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_rpm_slope": {
+      "units": "rpm/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_rpm"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_coolant_temp_c_mean": {
+      "units": "degC",
+      "expected_range": [
+        -40,
+        215
+      ],
+      "requires_available_groups": [
+        "coolant"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_coolant_temp_c_std": {
+      "units": "degC",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "coolant"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_coolant_temp_c_min": {
+      "units": "degC",
+      "expected_range": [
+        -40,
+        215
+      ],
+      "requires_available_groups": [
+        "coolant"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_coolant_temp_c_max": {
+      "units": "degC",
+      "expected_range": [
+        -40,
+        215
+      ],
+      "requires_available_groups": [
+        "coolant"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_coolant_temp_c_slope": {
+      "units": "degC/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "coolant"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_throttle_pct_mean": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "throttle"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_throttle_pct_std": {
+      "units": "%",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "throttle"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_throttle_pct_min": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "throttle"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_throttle_pct_max": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "throttle"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_throttle_pct_slope": {
+      "units": "%/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "throttle"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_mean": {
+      "units": "load_fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_std": {
+      "units": "load_fraction",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_min": {
+      "units": "load_fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_max": {
+      "units": "load_fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_slope": {
+      "units": "load_fraction/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_stft_pct_mean": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_stft_pct_std": {
+      "units": "%",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_stft_pct_min": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_stft_pct_max": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_stft_pct_slope": {
+      "units": "%/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ltft_pct_mean": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ltft_pct_std": {
+      "units": "%",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ltft_pct_min": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ltft_pct_max": {
+      "units": "%",
+      "expected_range": [
+        -100,
+        99.21875
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ltft_pct_slope": {
+      "units": "%/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "fuel_trims"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ignition_timing_mean": {
+      "units": "deg_BtDC",
+      "expected_range": [
+        -64,
+        63.5
+      ],
+      "requires_available_groups": [
+        "ignition_timing"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ignition_timing_std": {
+      "units": "deg_BtDC",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ignition_timing"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ignition_timing_min": {
+      "units": "deg_BtDC",
+      "expected_range": [
+        -64,
+        63.5
+      ],
+      "requires_available_groups": [
+        "ignition_timing"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ignition_timing_max": {
+      "units": "deg_BtDC",
+      "expected_range": [
+        -64,
+        63.5
+      ],
+      "requires_available_groups": [
+        "ignition_timing"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_ignition_timing_slope": {
+      "units": "deg_BtDC/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "ignition_timing"
+      ],
+      "requires_quality": [
+        "available_source=true"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_cycle_intensity_mean": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "knock",
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_cycle_intensity_max": {
+      "units": "simulator_amplitude_or_dimensionless",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "knock",
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "knock_cycle_pct_knocking": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "knock",
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_map_kpa_mean": {
+      "units": "kPa",
+      "expected_range": [
+        0,
+        255
+      ],
+      "requires_available_groups": [
+        "map"
+      ],
+      "requires_quality": [
+        "map_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_map_kpa_std": {
+      "units": "kPa",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "map"
+      ],
+      "requires_quality": [
+        "map_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_map_kpa_min": {
+      "units": "kPa",
+      "expected_range": [
+        0,
+        255
+      ],
+      "requires_available_groups": [
+        "map"
+      ],
+      "requires_quality": [
+        "map_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_map_kpa_max": {
+      "units": "kPa",
+      "expected_range": [
+        0,
+        255
+      ],
+      "requires_available_groups": [
+        "map"
+      ],
+      "requires_quality": [
+        "map_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_map_kpa_slope": {
+      "units": "kPa/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "map"
+      ],
+      "requires_quality": [
+        "map_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_pct_mean": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_pct_std": {
+      "units": "%",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_pct_min": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_pct_max": {
+      "units": "%",
+      "expected_range": [
+        0,
+        100
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "tel_engine_load_pct_slope": {
+      "units": "%/s",
+      "expected_range": [
+        null,
+        null
+      ],
+      "requires_available_groups": [
+        "engine_load"
+      ],
+      "requires_quality": [
+        "engine_load_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_period_s_mean": {
+      "units": "s",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_period_s_std": {
+      "units": "s",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_period_s_cv": {
+      "units": "dimensionless",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_mean": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_std": {
+      "units": "rpm",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_min": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_max": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_cv": {
+      "units": "dimensionless",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_tooth_rpm_p2p": {
+      "units": "rpm",
+      "expected_range": [
+        0,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_cycle_rpm_mean": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_cycle_rpm_std": {
+      "units": "rpm",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_cycle_rpm_min": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_cycle_rpm_max": {
+      "units": "rpm",
+      "expected_range": [
+        300,
+        8000
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_cycle_rpm_cv": {
+      "units": "dimensionless",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_angular_speed_mean_rad_s": {
+      "units": "rad/s",
+      "expected_range": [
+        0,
+        837.758
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_angular_speed_std_rad_s": {
+      "units": "rad/s",
+      "expected_range": [
+        0,
+        837.758
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_angular_speed_cv": {
+      "units": "dimensionless",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [
+        "ckp_signal_quality_status=good"
+      ],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64"
+    },
+    "ckp_valid_tooth_fraction": {
+      "units": "fraction",
+      "expected_range": [
+        0,
+        1
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64",
+      "nullable_when_unobservable": true
+    },
+    "ckp_expected_gap_count": {
+      "units": "count",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "integer",
+      "nullable_when_unobservable": true
+    },
+    "ckp_unexpected_gap_count": {
+      "units": "count",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "integer",
+      "nullable_when_unobservable": true
+    },
+    "ckp_min_samples_per_tooth": {
+      "units": "samples/tooth",
+      "expected_range": [
+        0,
+        null
+      ],
+      "requires_available_groups": [
+        "ckp"
+      ],
+      "requires_quality": [],
+      "missingness": "NaN only when a required source group is unavailable or required quality status is not satisfied.",
+      "dtype": "float64",
+      "nullable_when_unobservable": true
+    }
+  },
+  "sampling_assumptions": {
+    "fast_waveforms_hz": 25600,
+    "ecu_polling_hz": 10,
+    "ckp_min_samples_per_tooth": 10,
+    "ckp_plausible_rpm_range": [
+      300,
+      8000
+    ],
+    "timestamp_resolution_required": true,
+    "ecu_max_age_s": 0.2
+  },
+  "missingness_behavior": "No interpolation or zero-fill for missing groups. Sensor availability and quality metadata govern permitted null features. Any future imputation must be fit inside the training fold.",
+  "status": "ML contract only; no validated V2 training dataset",
+  "provenance_required": [
+    "source_id",
+    "source_commit",
+    "processor_revision",
+    "data_kind"
+  ],
+  "window_semantics": "shared run clock seconds; half-open [t_start,t_end)",
+  "legacy_feature_semantics": {
+    "crank_rpm": "V2 complete crank-revolution RPM mean",
+    "crank_rpm_std": "V2 complete crank-revolution RPM population standard deviation",
+    "crank_interval_cv": "V2 complete crank-revolution period coefficient of variation",
+    "knock_cycle_*": "requires separately validated knock/CKP gating; not produced by these adapters"
+  }
+}

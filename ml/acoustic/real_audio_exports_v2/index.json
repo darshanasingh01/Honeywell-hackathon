@@ -1,0 +1,62 @@
+{
+  "format_version": "engineguard-real-audio-audit/1",
+  "status": "PASS",
+  "source_root": "ml/datasets/hl_cead/extracted/MLVRG-Car-Engine-Audio",
+  "label_policy": "unknown unless verified metadata exists; no fault labels inferred",
+  "summary": {
+    "wav_count": 152,
+    "readable_count": 152,
+    "corrupt_count": 0,
+    "duplicate_group_count": 0,
+    "duplicate_file_count": 0,
+    "sample_rate_hz": [
+      44100
+    ],
+    "channel_counts": [
+      1
+    ],
+    "duration_total_s": 2637.8781405895693,
+    "duration_min_s": 11.06997732426304,
+    "duration_max_s": 31.78557823129252,
+    "clipped_file_count": 0,
+    "errors": []
+  },
+  "sample_exports": [
+    {
+      "filename": "sample_01_0001.npz",
+      "source_filename": "AlphaRomeo/Giulietta/1000/0001.wav",
+      "sha256": "e83e7a73ee35550b39bd5e83b59aa1dbb2b68b11523beb8b37709890348ceeb9",
+      "waveform_samples": 681036,
+      "spectrogram_shape": [
+        1025,
+        665
+      ]
+    },
+    {
+      "filename": "sample_02_0003.npz",
+      "source_filename": "Ford/Focus/2000/0003.wav",
+      "sha256": "be38950dd0d8ba047c380a3c09da9c302304196bb56b7c208e6e6b895bf25abd",
+      "waveform_samples": 692056,
+      "spectrogram_shape": [
+        1025,
+        675
+      ]
+    },
+    {
+      "filename": "sample_03_0001.npz",
+      "source_filename": "VolksWagen/Polo1.4/2000/0001.wav",
+      "sha256": "5469fc0d5fd8ed6fd47ff7de8425fa85b842307b8b6b50fa6f80c4615f4b993d",
+      "waveform_samples": 912456,
+      "spectrogram_shape": [
+        1025,
+        891
+      ]
+    }
+  ],
+  "manifest_sha256": "0578c406a06cb8df839fd2ede598da9ece8e481eb73c7bd2c21e326ed01d0722",
+  "limitations": [
+    "Labels are unknown; no fault labels inferred.",
+    "MFCC extraction was unavailable because librosa is not installed.",
+    "Exports are real audio metadata/features only, separate from synthetic V2 training."
+  ]
+}
