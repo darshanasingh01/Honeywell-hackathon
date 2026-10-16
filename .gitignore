@@ -242,3 +242,4 @@ ml/evaluation/*.txt
 !ml/evaluation/acoustic_hlcead_rpm.json
 !ml/evaluation/acoustic_hlcead_novelty_baseline.json
 !ml/evaluation/acoustic_hlcead_novelty_transient.json
+!ml/evaluation/synthetic_conditions_groupkfold.json

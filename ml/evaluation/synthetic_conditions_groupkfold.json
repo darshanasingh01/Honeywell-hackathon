@@ -1,0 +1,1360 @@
+{
+  "report_version": "1.0",
+  "model_version": "synthetic-engine-condition-baseline-v1",
+  "dataset_provenance": {
+    "data_origin": "Person B simulator feature-extraction pipeline",
+    "data_kind": "synthetic_simulated_engine_conditions",
+    "real_engine_measurements": false,
+    "fault_labels_are_simulated_conditions": true
+  },
+  "dataset": {
+    "source_path": "../Honeywell-features/data/processed/features.csv",
+    "rows": 1170,
+    "feature_count": 74,
+    "metadata_columns_excluded": [
+      "run_id",
+      "window_id",
+      "label",
+      "t_start",
+      "t_end"
+    ],
+    "classes": [
+      "normal",
+      "knock",
+      "misfire",
+      "overheating",
+      "valve_train_wear"
+    ],
+    "label_distribution": {
+      "knock": 234,
+      "misfire": 234,
+      "normal": 234,
+      "overheating": 234,
+      "valve_train_wear": 234
+    },
+    "unique_run_groups": 30,
+    "missing_feature_values": 0,
+    "sha256_features_csv": "4a8a76b7c27e896d5eab8c1617cd3331a521ca0eec4dbc00f6fb9da29dce2a29"
+  },
+  "evaluation": {
+    "method": "GroupKFold",
+    "n_splits": 5,
+    "group_column": "run_id",
+    "random_window_split_used": false,
+    "preprocessing_fitted_within_training_fold": true,
+    "class_order": [
+      "normal",
+      "knock",
+      "misfire",
+      "overheating",
+      "valve_train_wear"
+    ]
+  },
+  "models": {
+    "random_forest": {
+      "hyperparameters": {
+        "n_estimators": 300,
+        "max_features": "sqrt",
+        "class_weight": "balanced",
+        "random_state": 42,
+        "n_jobs": 1
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s4",
+            "misfire_s3",
+            "normal_s2",
+            "overheating_s1",
+            "valve_train_wear_s0",
+            "valve_train_wear_s5"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9948709518329771,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                38,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                78
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              }
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s3",
+            "misfire_s2",
+            "normal_s1",
+            "overheating_s0",
+            "overheating_s5",
+            "valve_train_wear_s4"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9914529914529915,
+            "macro_f1": 0.9924025974025973,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                76,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.9512195121951219,
+                "recall": 1.0,
+                "f1": 0.975,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 78
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 3,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s2",
+            "misfire_s1",
+            "normal_s0",
+            "normal_s5",
+            "overheating_s4",
+            "valve_train_wear_s3"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9914529914529915,
+            "macro_f1": 0.9924025974025973,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                76,
+                0,
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 78
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 0.9512195121951219,
+                "recall": 1.0,
+                "f1": 0.975,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 4,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s1",
+            "misfire_s0",
+            "misfire_s5",
+            "normal_s4",
+            "overheating_s3",
+            "valve_train_wear_s2"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9948709518329771,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                78,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                38,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 5,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s0",
+            "knock_s5",
+            "misfire_s4",
+            "normal_s3",
+            "overheating_s2",
+            "valve_train_wear_s1"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9102564102564102,
+            "macro_f1": 0.8831082795742009,
+            "balanced_accuracy": 0.8923076923076924,
+            "confusion_matrix": [
+              [
+                19,
+                0,
+                3,
+                17,
+                0
+              ],
+              [
+                0,
+                78,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                38,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.95,
+                "recall": 0.48717948717948717,
+                "f1": 0.6440677966101694,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "misfire": {
+                "precision": 0.9285714285714286,
+                "recall": 1.0,
+                "f1": 0.9629629629629629,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 0.6909090909090909,
+                "recall": 0.9743589743589743,
+                "f1": 0.8085106382978723,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        }
+      ],
+      "mean_fold_macro_f1": 0.97153107560907,
+      "std_fold_macro_f1": 0.044225176872171,
+      "out_of_fold_metrics": {
+        "accuracy": 0.9769230769230769,
+        "macro_f1": 0.9767942159644178,
+        "balanced_accuracy": 0.976923076923077,
+        "confusion_matrix": [
+          [
+            212,
+            0,
+            3,
+            19,
+            0
+          ],
+          [
+            0,
+            234,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            234,
+            0,
+            0
+          ],
+          [
+            5,
+            0,
+            0,
+            229,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            234
+          ]
+        ],
+        "class_order": [
+          "normal",
+          "knock",
+          "misfire",
+          "overheating",
+          "valve_train_wear"
+        ],
+        "class_metrics": {
+          "normal": {
+            "precision": 0.9769585253456221,
+            "recall": 0.905982905982906,
+            "f1": 0.9401330376940134,
+            "support": 234
+          },
+          "knock": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "misfire": {
+            "precision": 0.9873417721518988,
+            "recall": 1.0,
+            "f1": 0.9936305732484076,
+            "support": 234
+          },
+          "overheating": {
+            "precision": 0.9233870967741935,
+            "recall": 0.9786324786324786,
+            "f1": 0.950207468879668,
+            "support": 234
+          },
+          "valve_train_wear": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          }
+        }
+      }
+    },
+    "scaled_rbf_svm": {
+      "hyperparameters": {
+        "scaler": "StandardScaler",
+        "kernel": "rbf",
+        "C": 1.0,
+        "gamma": "scale",
+        "class_weight": "balanced",
+        "probability": false
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s4",
+            "misfire_s3",
+            "normal_s2",
+            "overheating_s1",
+            "valve_train_wear_s0",
+            "valve_train_wear_s5"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9948709518329771,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                38,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                78
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              }
+            }
+          }
+        },
+        {
+          "fold": 2,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s3",
+            "misfire_s2",
+            "normal_s1",
+            "overheating_s0",
+            "overheating_s5",
+            "valve_train_wear_s4"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9961780318497346,
+            "balanced_accuracy": 0.9974358974358974,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                77,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9871794871794872,
+                "f1": 0.9935483870967742,
+                "support": 78
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 3,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s2",
+            "misfire_s1",
+            "normal_s0",
+            "normal_s5",
+            "overheating_s4",
+            "valve_train_wear_s3"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9957264957264957,
+            "macro_f1": 0.9961287120522788,
+            "balanced_accuracy": 0.9948717948717949,
+            "confusion_matrix": [
+              [
+                78,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                38
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.9873417721518988,
+                "recall": 1.0,
+                "f1": 0.9936305732484076,
+                "support": 78
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 0.9743589743589743,
+                "f1": 0.987012987012987,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 4,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s1",
+            "misfire_s0",
+            "misfire_s5",
+            "normal_s4",
+            "overheating_s3",
+            "valve_train_wear_s2"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9871794871794872,
+            "macro_f1": 0.9845925925925926,
+            "balanced_accuracy": 0.9846153846153847,
+            "confusion_matrix": [
+              [
+                39,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                39,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                78,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                0,
+                36,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 0.9285714285714286,
+                "recall": 1.0,
+                "f1": 0.9629629629629629,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              },
+              "misfire": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "overheating": {
+                "precision": 1.0,
+                "recall": 0.9230769230769231,
+                "f1": 0.96,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        },
+        {
+          "fold": 5,
+          "train_group_count": 24,
+          "test_group_count": 6,
+          "test_groups": [
+            "knock_s0",
+            "knock_s5",
+            "misfire_s4",
+            "normal_s3",
+            "overheating_s2",
+            "valve_train_wear_s1"
+          ],
+          "train_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "test_class_coverage": {
+            "normal": true,
+            "knock": true,
+            "misfire": true,
+            "overheating": true,
+            "valve_train_wear": true
+          },
+          "missing_train_classes": [],
+          "missing_test_classes": [],
+          "metrics": {
+            "accuracy": 0.9914529914529915,
+            "macro_f1": 0.9896735509660226,
+            "balanced_accuracy": 0.9897435897435898,
+            "confusion_matrix": [
+              [
+                37,
+                0,
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                78,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                39,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                39,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                39
+              ]
+            ],
+            "class_order": [
+              "normal",
+              "knock",
+              "misfire",
+              "overheating",
+              "valve_train_wear"
+            ],
+            "class_metrics": {
+              "normal": {
+                "precision": 1.0,
+                "recall": 0.9487179487179487,
+                "f1": 0.9736842105263158,
+                "support": 39
+              },
+              "knock": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 78
+              },
+              "misfire": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "overheating": {
+                "precision": 0.975,
+                "recall": 1.0,
+                "f1": 0.9873417721518988,
+                "support": 39
+              },
+              "valve_train_wear": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "support": 39
+              }
+            }
+          }
+        }
+      ],
+      "mean_fold_macro_f1": 0.9922887678587211,
+      "std_fold_macro_f1": 0.0045301146343367715,
+      "out_of_fold_metrics": {
+        "accuracy": 0.9931623931623932,
+        "macro_f1": 0.9931692578379391,
+        "balanced_accuracy": 0.9931623931623932,
+        "confusion_matrix": [
+          [
+            232,
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            234,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            234,
+            0,
+            0
+          ],
+          [
+            5,
+            0,
+            0,
+            229,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            233
+          ]
+        ],
+        "class_order": [
+          "normal",
+          "knock",
+          "misfire",
+          "overheating",
+          "valve_train_wear"
+        ],
+        "class_metrics": {
+          "normal": {
+            "precision": 0.9747899159663865,
+            "recall": 0.9914529914529915,
+            "f1": 0.9830508474576272,
+            "support": 234
+          },
+          "knock": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 234
+          },
+          "misfire": {
+            "precision": 0.9957446808510638,
+            "recall": 1.0,
+            "f1": 0.997867803837953,
+            "support": 234
+          },
+          "overheating": {
+            "precision": 0.9956521739130435,
+            "recall": 0.9786324786324786,
+            "f1": 0.9870689655172413,
+            "support": 234
+          },
+          "valve_train_wear": {
+            "precision": 1.0,
+            "recall": 0.9957264957264957,
+            "f1": 0.9978586723768736,
+            "support": 234
+          }
+        }
+      }
+    }
+  },
+  "selection": {
+    "criterion": "highest mean grouped-CV fold macro F1",
+    "selected_model": "scaled_rbf_svm",
+    "selected_mean_fold_macro_f1": 0.9922887678587211
+  },
+  "limitations": [
+    "All training and evaluation examples come from a deterministic simulator; no real engine recordings are represented.",
+    "The classes are simulated operating/fault conditions and do not establish real-world fault-detection accuracy.",
+    "GroupKFold holds out run_id groups from the same simulator, not independent physical engines or vehicles.",
+    "No CNN, random window-level split, or cross-dataset evaluation was performed.",
+    "Any class score emitted at inference is a model score and must not be interpreted as a validated real-world fault probability."
+  ],
+  "software": {
+    "scikit_learn": "1.9.1"
+  },
+  "selected_model_artifact": "ml/saved_models/synthetic_conditions_baseline.joblib"
+}
