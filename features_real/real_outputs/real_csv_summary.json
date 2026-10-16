@@ -1,0 +1,42 @@
+{
+  "config": {
+    "label_col": "Fault",
+    "win_rows": 128,
+    "hop_rows": 64,
+    "chunk_rows": 2000,
+    "purge_rows": 128,
+    "val_frac": 0.15,
+    "test_frac": 0.15,
+    "seed": 42
+  },
+  "load_report": {
+    "rows_in_file": 55999,
+    "exact_duplicate_rows_dropped": 1
+  },
+  "window_report": {
+    "n_classes": 4,
+    "n_runs": 4,
+    "rows_in_contiguous_runs_note": "contiguous",
+    "n_chunks": 29,
+    "n_windows": 722,
+    "windows_per_split": {
+      "train": 530,
+      "test": 104,
+      "val": 88
+    },
+    "windows_per_class_split": {
+      "0|test": 26,
+      "0|train": 156,
+      "0|val": 26,
+      "1|test": 26,
+      "1|train": 88,
+      "1|val": 26,
+      "2|test": 26,
+      "2|train": 156,
+      "2|val": 10,
+      "3|test": 26,
+      "3|train": 130,
+      "3|val": 26
+    }
+  }
+}
