@@ -7,7 +7,7 @@ import unittest
 
 from ml.diagnostics.adapters.acoustic import wrap_acoustic_output
 from ml.diagnostics.adapters.vibration import wrap_vibration_output
-from ml.diagnostics.fusion import fuse_predictions
+from ml.diagnostics.fusion import fuse_predictions, fuse_sensor_outputs
 from ml.diagnostics.schema import SchemaValidationError, validate_prediction
 
 
@@ -28,6 +28,7 @@ def result(sensor: str, *, score: float = 1.0, threshold: float = 0.5,
                     if status == "available" else None),
         "fault_prediction": None, "fault_probabilities": None,
         "signal_quality": {"status": quality, "metrics": {}},
+        "provenance": {"kind": "acquisition", "source_id": "capture-system-1"},
         "model_version": "test-v1" if status == "available" else None,
         "limitations": [],
         "error": ({"code": "test_error", "message": "sensor failed"} if status == "error" else None),
@@ -57,6 +58,56 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(fused["fusion_status"], "fused")
         self.assertEqual(fused["fusion_decision"], "review_recommended")
         self.assertIsNone(fused["fault_prediction"])
+
+    def test_unified_three_sensor_input_preserves_native_results(self):
+        acoustic = result("acoustic", score=0.09, threshold=0.08)
+        vibration = result("vibration", score=130.0, threshold=100.0)
+        ckp = result("ckp", alert=False)
+        ckp["anomaly"] = None
+        ckp["rpm"] = {"value": 1500.0, "confidence": None, "source": "ckp_tooth_timing"}
+        fused = fuse_sensor_outputs(acoustic=acoustic, vibration=vibration, ckp=ckp)
+        self.assertEqual(fused["fusion_status"], "fused")
+        self.assertEqual(fused["fusion_decision"], "multi_sensor_corroboration")
+        self.assertEqual([x["sensor_type"] for x in fused["sensor_results"]], ["acoustic", "vibration", "ckp"])
+        self.assertIsNone(fused["fault_prediction"])
+        self.assertEqual(fused["sensor_results"][2]["rpm"]["value"], 1500.0)
+        self.assertEqual([x["score"] for x in fused["anomaly_evidence"]], [0.09, 130.0])
+
+    def test_unified_interface_reports_missing_sensors(self):
+        output = fuse_sensor_outputs(acoustic=result("acoustic"))
+        self.assertEqual(output["fusion_status"], "single_sensor")
+        self.assertEqual(output["missing_sensors"], ["vibration", "ckp"])
+
+    def test_conflicting_sessions_do_not_fuse(self):
+        fused = fuse_predictions([result("acoustic"), result("vibration", session="session-2")])
+        self.assertEqual(fused["fusion_status"], "not_fused")
+        self.assertIn("conflicting_session_id", fused["fusion_reasons"])
+
+    def test_missing_timestamps_do_not_fuse_and_reason_is_reported(self):
+        fused = fuse_predictions([result("acoustic", start=None, end=None), result("vibration")])
+        self.assertEqual(fused["fusion_status"], "not_fused")
+        self.assertIn("missing_measurement_timestamps", fused["fusion_reasons"])
+
+    def test_unknown_or_dataset_provenance_does_not_fuse(self):
+        acoustic = result("acoustic")
+        vibration = result("vibration")
+        acoustic["provenance"] = {"kind": "unknown", "source_id": None}
+        vibration["provenance"] = {"kind": "dataset", "source_id": "NUST"}
+        fused = fuse_predictions([acoustic, vibration])
+        self.assertEqual(fused["fusion_status"], "not_fused")
+        self.assertIn("acquisition_provenance_unknown_or_not_acquisition_linked", fused["fusion_reasons"])
+
+    def test_different_acquisition_sources_do_not_fuse(self):
+        acoustic = result("acoustic")
+        vibration = result("vibration")
+        vibration["provenance"]["source_id"] = "capture-system-2"
+        fused = fuse_predictions([acoustic, vibration])
+        self.assertEqual(fused["fusion_status"], "not_fused")
+        self.assertIn("conflicting_acquisition_provenance", fused["fusion_reasons"])
+
+    def test_named_interface_rejects_sensor_in_wrong_slot(self):
+        with self.assertRaises(SchemaValidationError):
+            fuse_sensor_outputs(acoustic=result("vibration"))
 
     def test_conflicting_engine_ids_do_not_fuse(self):
         fused = fuse_predictions([result("acoustic"), result("vibration", engine="engine-B")])

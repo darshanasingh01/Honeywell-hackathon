@@ -1,0 +1,90 @@
+{
+  "example_type": "illustrative_only",
+  "fusion_status": "not_fused",
+  "event_id": null,
+  "fusion_decision": "review_recommended",
+  "fault_prediction": null,
+  "missing_sensors": [],
+  "fusion_reasons": [
+    "fewer_than_two_good_quality_anomaly_outputs",
+    "acquisition_provenance_unknown_or_not_acquisition_linked"
+  ],
+  "anomaly_evidence": [
+    {
+      "sensor_type": "acoustic",
+      "score_name": "acoustic_novelty_score",
+      "score": 0.13,
+      "threshold": 0.1,
+      "is_unusual": true,
+      "signal_quality": "not_assessed"
+    }
+  ],
+  "sensor_results": [
+    {
+      "schema_version": "1.0",
+      "prediction_id": "demo-acoustic-001",
+      "event_id": null,
+      "sensor_type": "acoustic",
+      "status": "available",
+      "engine_id": null,
+      "session_id": null,
+      "measurement_interval": {"start_utc": null, "end_utc": null},
+      "rpm": {"value": 1500, "confidence": null, "source": "acoustic_model"},
+      "anomaly": {"score": 0.13, "threshold": 0.1, "is_unusual": true, "score_name": "acoustic_novelty_score"},
+      "fault_prediction": null,
+      "fault_probabilities": null,
+      "signal_quality": {"status": "not_assessed", "metrics": {}},
+      "provenance": {"kind": "dataset", "source_id": "HL-CEAD"},
+      "model_version": "illustrative-acoustic",
+      "limitations": ["Illustrative value; not a measured inference."],
+      "error": null,
+      "native_output": {"illustrative": true, "predicted_rpm": 1500, "rpm_confidence": null, "acoustic_novelty_score": 0.13}
+    },
+    {
+      "schema_version": "1.0",
+      "prediction_id": "demo-vibration-001",
+      "event_id": null,
+      "sensor_type": "vibration",
+      "status": "available",
+      "engine_id": null,
+      "session_id": null,
+      "measurement_interval": {"start_utc": null, "end_utc": null},
+      "rpm": null,
+      "anomaly": null,
+      "fault_prediction": "faulty_bearing",
+      "fault_probabilities": {"healthy_bearing": 0.22, "faulty_bearing": 0.78},
+      "signal_quality": {"status": "poor", "metrics": {"sample_rate_verified": false}},
+      "provenance": {"kind": "dataset", "source_id": "NUST-bearing"},
+      "model_version": "illustrative-vibration",
+      "limitations": ["Illustrative uncalibrated class scores; not an Engine knock diagnosis."],
+      "error": null,
+      "native_output": {"illustrative": true, "predicted_bearing_condition": "faulty_bearing", "class_probabilities_uncalibrated": {"healthy_bearing": 0.22, "faulty_bearing": 0.78}}
+    },
+    {
+      "schema_version": "1.0",
+      "prediction_id": "demo-ckp-001",
+      "event_id": null,
+      "sensor_type": "ckp",
+      "status": "available",
+      "engine_id": null,
+      "session_id": null,
+      "measurement_interval": {"start_utc": null, "end_utc": null},
+      "rpm": {"value": 3003.003003, "confidence": null, "source": "ckp_tooth_timing"},
+      "anomaly": null,
+      "fault_prediction": null,
+      "fault_probabilities": null,
+      "signal_quality": {"status": "poor", "metrics": {"sample_rate_hz": 4000}},
+      "provenance": {"kind": "synthetic", "source_id": null},
+      "model_version": "illustrative-ckp",
+      "limitations": ["Illustrative synthetic example; not a real CKP measurement or fault detector."],
+      "error": null,
+      "native_output": {"illustrative": true, "estimated_rpm": 3003.003003, "synthetic": true}
+    }
+  ],
+  "limitations": [
+    "Illustrative only; no synchronized three-sensor recording is represented.",
+    "The sensors have separate source origins and cannot be fused as one acquisition event.",
+    "Anomaly agreement is not a confirmed fault diagnosis.",
+    "Scores, thresholds, class outputs, and RPM values are kept separate; no cross-model probability is calculated."
+  ]
+}

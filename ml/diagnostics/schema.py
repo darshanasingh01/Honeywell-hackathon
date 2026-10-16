@@ -68,7 +68,10 @@ def validate_prediction(prediction: dict[str, Any]) -> dict[str, Any]:
     if missing:
         _fail(f"missing required fields: {', '.join(sorted(missing))}")
     if extra:
-        _fail(f"unexpected fields: {', '.join(sorted(extra))}")
+        allowed = {"provenance"}
+        unexpected = extra - allowed
+        if unexpected:
+            _fail(f"unexpected fields: {', '.join(sorted(unexpected))}")
 
     if prediction["schema_version"] != "1.0":
         _fail("schema_version must be '1.0'")
@@ -137,6 +140,16 @@ def validate_prediction(prediction: dict[str, Any]) -> dict[str, Any]:
     _nonempty_string(prediction["model_version"], "model_version", nullable=True)
     if not isinstance(prediction["limitations"], list) or any(not isinstance(item, str) for item in prediction["limitations"]):
         _fail("limitations must be an array of strings")
+    provenance = prediction.get("provenance", {"kind": "unknown", "source_id": None})
+    if not isinstance(provenance, dict) or set(provenance) != {"kind", "source_id"}:
+        _fail("provenance must contain kind and source_id")
+    if provenance["kind"] not in {"acquisition", "dataset", "synthetic", "unknown"}:
+        _fail("provenance.kind must be acquisition, dataset, synthetic, or unknown")
+    _nonempty_string(provenance["source_id"], "provenance.source_id", nullable=True)
+    if provenance["kind"] == "acquisition" and provenance["source_id"] is None:
+        _fail("acquisition provenance requires a source_id")
+    if provenance["kind"] == "unknown" and provenance["source_id"] is not None:
+        _fail("unknown provenance must have a null source_id")
     error = prediction["error"]
     if error is not None:
         if not isinstance(error, dict) or set(error) != {"code", "message"}:
@@ -164,6 +177,7 @@ def unavailable_prediction(sensor_type: str, *, reason: str, prediction_id: str,
         "rpm": None, "anomaly": None, "fault_prediction": None,
         "fault_probabilities": None,
         "signal_quality": {"status": "unavailable", "metrics": {}},
+        "provenance": {"kind": "unknown", "source_id": None},
         "model_version": None, "limitations": [reason], "error": None, "native_output": None,
     }
     return validate_prediction(result)

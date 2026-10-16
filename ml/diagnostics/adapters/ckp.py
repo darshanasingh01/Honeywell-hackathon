@@ -41,12 +41,18 @@ def wrap_ckp_output(
     session_id: str | None = None,
     start_utc: str | None = None,
     end_utc: str | None = None,
+    provenance: dict | None = None,
 ) -> dict:
     """Wrap native RPM analysis without creating acquisition provenance."""
     native = copy.deepcopy(native)
     native.pop("ground_truth_comparison", None)
     interval = _interval(start_utc, end_utc)
     available = native.get("status") == "available" and native.get("estimated_rpm") is not None
+    # Do not let caller-provided metadata relabel generated waveforms as real.
+    if native.get("synthetic"):
+        provenance_value = {"kind": "synthetic", "source_id": None}
+    else:
+        provenance_value = provenance or {"kind": "unknown", "source_id": None}
     result = {
         "schema_version": "1.0",
         "prediction_id": prediction_id or str(uuid.uuid4()),
@@ -68,6 +74,7 @@ def wrap_ckp_output(
             "status": native.get("quality_status", "unavailable") if available else "unavailable",
             "metrics": native.get("metrics", {}),
         },
+        "provenance": provenance_value,
         "model_version": native.get("model_version"),
         "limitations": list(native.get("limitations", [])),
         "error": None,
@@ -86,13 +93,19 @@ def main() -> int:
     parser.add_argument("--sample-rate-hz", type=int)
     parser.add_argument("--nominal-teeth", type=int, default=60)
     parser.add_argument("--missing-teeth", type=int, default=2)
+    parser.add_argument("--provenance-kind", choices=("acquisition", "dataset", "synthetic", "unknown"), default="unknown")
+    parser.add_argument("--provenance-source-id", help="Acquisition or source dataset ID; required for acquisition provenance")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     native = analyze_csv(
         args.signal, sample_rate_hz=args.sample_rate_hz,
         nominal_teeth=args.nominal_teeth, missing_teeth=args.missing_teeth,
     )
-    envelope = wrap_ckp_output(native)
+    envelope = wrap_ckp_output(
+        native,
+        provenance={"kind": args.provenance_kind,
+                    "source_id": args.provenance_source_id if args.provenance_kind != "unknown" else None},
+    )
     encoded = json.dumps(envelope, indent=2, allow_nan=False)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -38,6 +38,7 @@ def wrap_acoustic_output(
     session_id: str | None = None,
     start_utc: str | None = None,
     end_utc: str | None = None,
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Map the acoustic CLI's current JSON into a validated envelope."""
     interval = _check_interval(start_utc, end_utc)
@@ -76,6 +77,7 @@ def wrap_acoustic_output(
         "fault_prediction": native.get("fault_prediction"),
         "fault_probabilities": None,
         "signal_quality": {"status": "not_assessed", "metrics": {}},
+        "provenance": provenance or {"kind": "unknown", "source_id": None},
         "model_version": native.get("model_version"),
         "limitations": limitations,
         "error": None,
@@ -93,6 +95,7 @@ def _error_envelope(message: str, *, prediction_id: str, event_id: str | None, e
         "rpm": None, "anomaly": None, "fault_prediction": None,
         "fault_probabilities": None,
         "signal_quality": {"status": "unavailable", "metrics": {}},
+        "provenance": {"kind": "unknown", "source_id": None},
         "model_version": None, "limitations": ["Acoustic inference did not produce a prediction."],
         "error": {"code": "acoustic_inference_failed", "message": message}, "native_output": None,
     })
@@ -106,6 +109,8 @@ def main() -> int:
     parser.add_argument("--session-id", help="Acquisition-provided recording session ID")
     parser.add_argument("--start-utc", help="Acquisition start time in ISO-8601 with timezone")
     parser.add_argument("--end-utc", help="Acquisition end time in ISO-8601 with timezone")
+    parser.add_argument("--provenance-kind", choices=("acquisition", "dataset", "synthetic", "unknown"), default="unknown")
+    parser.add_argument("--provenance-source-id", help="Acquisition or source dataset ID; required for acquisition provenance")
     parser.add_argument("--rpm-model", type=Path, default=Path("ml/saved_models/acoustic_hlcead_rpm.joblib"))
     parser.add_argument("--novelty-model", type=Path, default=Path("ml/saved_models/acoustic_hlcead_novelty.joblib"))
     parser.add_argument("--output", type=Path, help="Optional envelope JSON path; default writes to stdout")
@@ -127,6 +132,8 @@ def main() -> int:
                 native, prediction_id=prediction_id, event_id=args.event_id,
                 engine_id=args.engine_id, session_id=args.session_id,
                 start_utc=args.start_utc, end_utc=args.end_utc,
+                provenance={"kind": args.provenance_kind,
+                            "source_id": args.provenance_source_id if args.provenance_kind != "unknown" else None},
             )
         except (json.JSONDecodeError, TypeError, ValueError) as exc:
             envelope = _error_envelope(

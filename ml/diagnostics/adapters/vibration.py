@@ -38,7 +38,7 @@ def wrap_vibration_output(
     native: dict[str, Any], *, prediction_id: str | None = None,
     event_id: str | None = None, engine_id: str | None = None,
     session_id: str | None = None, start_utc: str | None = None,
-    end_utc: str | None = None,
+    end_utc: str | None = None, provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Map native model output to the shared schema without inventing provenance."""
     interval = _interval(start_utc, end_utc)
@@ -69,6 +69,7 @@ def wrap_vibration_output(
         "fault_prediction": predicted,
         "fault_probabilities": probabilities,
         "signal_quality": quality,
+        "provenance": provenance or {"kind": "unknown", "source_id": None},
         "model_version": native.get("model_version"),
         "limitations": limitations,
         "error": None,
@@ -87,6 +88,7 @@ def _error_envelope(message: str, *, prediction_id: str, event_id: str | None,
         "rpm": None, "anomaly": None, "fault_prediction": None,
         "fault_probabilities": None,
         "signal_quality": {"status": "unavailable", "metrics": {}},
+        "provenance": {"kind": "unknown", "source_id": None},
         "model_version": None,
         "limitations": ["Vibration bearing-condition inference did not produce a prediction."],
         "error": {"code": "vibration_inference_failed", "message": message},
@@ -104,6 +106,8 @@ def main() -> int:
     parser.add_argument("--session-id", help="Acquisition-provided session ID")
     parser.add_argument("--start-utc", help="Acquisition-provided timezone-aware start time")
     parser.add_argument("--end-utc", help="Acquisition-provided timezone-aware end time")
+    parser.add_argument("--provenance-kind", choices=("acquisition", "dataset", "synthetic", "unknown"), default="unknown")
+    parser.add_argument("--provenance-source-id", help="Acquisition or source dataset ID; required for acquisition provenance")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
@@ -120,6 +124,8 @@ def main() -> int:
                 native, prediction_id=prediction_id, event_id=args.event_id,
                 engine_id=args.engine_id, session_id=args.session_id,
                 start_utc=args.start_utc, end_utc=args.end_utc,
+                provenance={"kind": args.provenance_kind,
+                            "source_id": args.provenance_source_id if args.provenance_kind != "unknown" else None},
             )
         except (json.JSONDecodeError, TypeError, ValueError) as exc:
             envelope = _error_envelope(str(exc), prediction_id=prediction_id,
