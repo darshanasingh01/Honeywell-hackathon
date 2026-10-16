@@ -1,7 +1,7 @@
 """Pure DSP feature-extraction functions for engine diagnostic waveforms.
 
 No file I/O. Every function takes raw arrays (plus the sample rate where needed)
-and returns an ordered dict of named features. These compose into the 74-feature
+and returns an ordered dict of named features. These compose into the 136-feature
 contract consumed by the pipeline.
 
 Scipy is used for the Butterworth band-pass (``butter(output='sos')`` +
@@ -27,6 +27,7 @@ TELEMETRY_SIGNALS = [
     "engine_load",
     "stft_pct",
     "ltft_pct",
+    "ignition_timing",
 ]
 ENVELOPE_BAND = (5000.0, 10000.0)
 
@@ -217,7 +218,7 @@ def extract_crank_features(crank, fs):
 
 
 # ----------------------------------------------------------------------------
-# Telemetry features (30 keys)
+# Telemetry features (35 keys)
 # ----------------------------------------------------------------------------
 def extract_telemetry_features(telemetry_window: pd.DataFrame, signals=TELEMETRY_SIGNALS):
     """Per-signal mean/std/min/max/slope over the telemetry window."""

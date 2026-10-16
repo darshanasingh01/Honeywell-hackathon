@@ -1,11 +1,11 @@
 """Window-level feature + spectrogram pipeline (25.6 kHz).
 
 Reads raw runs, slices overlapped windows, and for each window produces a
-74-feature row plus a 2-channel spectrogram. Telemetry is taken ONLY from the
+136-feature row plus a 2-channel spectrogram. Telemetry is taken ONLY from the
 decoded CAN log (never the raw telemetry CSV), matching the live Person D path.
 
 Three row-aligned outputs are written:
-  data/processed/features.csv          (meta cols + 74 feature cols)
+  data/processed/features.csv          (meta cols + 136 feature cols)
   data/processed/spectrograms.npy      (N, 2, F, T) float32
   data/processed/spectrogram_meta.json (per-row meta + global settings)
 
@@ -45,7 +45,7 @@ SEEDS = (0, 1, 2, 3, 4, 5)
 
 META_COLUMNS = ["run_id", "window_id", "label", "t_start", "t_end"]
 
-# ---- Exact 74-feature column order (the training contract) ----
+# ---- Exact 136-feature column order (the training contract) ----
 _FAST_KEYS = [
     "std", "rms", "peak", "crest_factor", "kurtosis", "zero_crossing_rate",
     "dominant_frequency_hz", "spectral_centroid_hz",
@@ -65,6 +65,9 @@ _GATED_KEYS = [
 FEATURE_COLUMNS = (
     [f"mic_{k}" for k in _FAST_KEYS]
     + [f"knock_{k}" for k in _FAST_KEYS]
+    + [f"accel_x_{k}" for k in _FAST_KEYS]
+    + [f"accel_y_{k}" for k in _FAST_KEYS]
+    + [f"accel_z_{k}" for k in _FAST_KEYS]
     + list(_CRANK_KEYS)
     + [f"tel_{sig}_{stat}" for sig in TELEMETRY_SIGNALS for stat in _TEL_STATS]
     + list(_GATED_KEYS)
@@ -97,14 +100,20 @@ def compute_spectrogram(mic, knock, fs, nperseg=NPERSEG):
     return np.stack(chans, axis=0).astype(np.float32)
 
 
-def features_for_window(mic, knock, crank, telemetry_rows, fs=FS_EXPECTED):
+def features_for_window(mic, knock, crank, telemetry_rows,
+                        accel_x, accel_y, accel_z, fs=FS_EXPECTED):
     """Shared core: one window -> (feature_row dict, spectrogram ndarray).
 
-    Used for both the training dataset and the Person D live path.
+    Used for both the training dataset and the Person D live path. The
+    spectrogram stays 2-channel (mic, knock); the accelerometer axes contribute
+    fast-channel feature columns only.
     """
     row = {}
     row.update(extract_fast_channel_features(mic, fs, "mic"))
     row.update(extract_fast_channel_features(knock, fs, "knock"))
+    row.update(extract_fast_channel_features(accel_x, fs, "accel_x"))
+    row.update(extract_fast_channel_features(accel_y, fs, "accel_y"))
+    row.update(extract_fast_channel_features(accel_z, fs, "accel_z"))
     row.update(extract_crank_features(crank, fs))
     row.update(extract_telemetry_features(telemetry_rows))
     row.update(crank_gated_knock(knock, crank, fs))
@@ -117,6 +126,9 @@ def process_run(waveform_df, telemetry_df, run_id, label, fs):
     """Window one run into aligned (feature rows, spectrograms)."""
     mic = waveform_df["microphone_audio"].to_numpy(dtype=float)
     knock = waveform_df["knock_sensor"].to_numpy(dtype=float)
+    accel_x = waveform_df["accel_x"].to_numpy(dtype=float)
+    accel_y = waveform_df["accel_y"].to_numpy(dtype=float)
+    accel_z = waveform_df["accel_z"].to_numpy(dtype=float)
     crank = waveform_df["crank_pulse"].to_numpy(dtype=float)
     ts = waveform_df["timestamp_s"].to_numpy(dtype=float)
     has_cond = "condition" in waveform_df.columns
@@ -145,7 +157,8 @@ def process_run(waveform_df, telemetry_df, run_id, label, fs):
         ]
 
         feat, spec = features_for_window(
-            mic[start:end], knock[start:end], crank[start:end], tel_win, fs
+            mic[start:end], knock[start:end], crank[start:end], tel_win,
+            accel_x[start:end], accel_y[start:end], accel_z[start:end], fs
         )
         feat_row = {
             "run_id": run_id,

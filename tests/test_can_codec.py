@@ -42,6 +42,19 @@ def test_fuel_trim_signed():
     assert abs(decode_pid(0x06, a) - (-5.0)) <= 100.0 / 128.0 + 1e-6
 
 
+def test_pid_formula_ignition_timing():
+    # 0x0E: A/2 - 64 (quantum 0.5 deg BTDC)
+    for deg in (8.0, 13.0, 15.0, 20.0):
+        a = encode_pid(0x0E, deg)
+        assert len(a) == 1
+        assert abs(decode_pid(0x0E, a) - deg) <= 0.5 + 1e-9
+
+
+def test_poll_pids_includes_ignition_timing():
+    assert 0x0E in POLL_PIDS
+    assert len(POLL_PIDS) == 7
+
+
 def test_frame_structure():
     telemetry, _ = simulate_engine("normal", duration_s=1.0, seed=0)
     log = telemetry_to_can(telemetry)

@@ -11,6 +11,7 @@ PID table (mode 01):
   0x06 stft_pct           (A-128)*100/128  %
   0x07 ltft_pct           (A-128)*100/128  %
   0x0C engine_rpm         (256*A+B)/4  rpm   (2 data bytes)
+  0x0E ignition_timing    A/2-64     deg BTDC
   0x11 throttle_pct       A*100/255  %
 """
 from __future__ import annotations
@@ -22,7 +23,7 @@ import pandas as pd
 
 REQUEST_ID = 0x7DF
 RESPONSE_ID = 0x7E8
-POLL_PIDS = [0x04, 0x05, 0x06, 0x07, 0x0C, 0x11]
+POLL_PIDS = [0x04, 0x05, 0x06, 0x07, 0x0C, 0x0E, 0x11]
 
 # pid -> (telemetry column, n_data_bytes)
 PID_TO_SIGNAL = {
@@ -31,6 +32,7 @@ PID_TO_SIGNAL = {
     0x06: ("stft_pct", 1),
     0x07: ("ltft_pct", 1),
     0x0C: ("engine_rpm", 2),
+    0x0E: ("ignition_timing", 1),
     0x11: ("throttle_pct", 1),
 }
 SIGNAL_TO_PID = {sig: pid for pid, (sig, _) in PID_TO_SIGNAL.items()}
@@ -56,6 +58,9 @@ def encode_pid(pid, value):
         a = (raw >> 8) & 0xFF
         b = raw & 0xFF
         return (a, b)
+    if pid == 0x0E:            # ignition timing: A/2 - 64 -> A = (value+64)*2
+        a = _clamp_byte((value + 64.0) * 2.0)
+        return (a,)
     if pid == 0x11:            # throttle: A*100/255
         a = _clamp_byte(value * 255.0 / 100.0)
         return (a,)
@@ -75,6 +80,8 @@ def decode_pid(pid, data):
     if pid == 0x0C:
         b = data[1]
         return (256 * a + b) / 4.0
+    if pid == 0x0E:
+        return a / 2.0 - 64.0
     if pid == 0x11:
         return a * 100.0 / 255.0
     raise ValueError(f"Unsupported PID 0x{pid:02X}")
@@ -216,6 +223,7 @@ ROUNDTRIP_TOL = {
     "stft_pct": 100.0 / 128.0 + 1e-9,              # ~0.78 %
     "ltft_pct": 100.0 / 128.0 + 1e-9,
     "engine_rpm": 0.25 + 1e-9,
+    "ignition_timing": 0.5 + 1e-9,                 # A/2 quantum = 0.5 deg
     "throttle_pct": 100.0 / 255.0 + 1e-9,          # ~0.39 %
 }
 

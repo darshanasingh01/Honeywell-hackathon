@@ -5,7 +5,7 @@ Checklist (per the architect plan):
   2.  row counts match: features == npy.shape[0] == meta rows
   3.  spectrograms ndim == 4 and channels == 2
   4.  no NaN/Inf in features or spectrograms
-  5.  feature count == 74 and exact column set/order matches the contract
+  5.  feature count == 136 and exact column set/order matches the contract
   6.  per-row run_id/window_id align features <-> meta
   7.  all 5 labels present; each run_id maps to exactly one label (print counts)
   8.  t_end > t_start; window_id unique within run; no straddle
@@ -63,9 +63,9 @@ def validate(features_csv, spectrograms_npy, meta_json):
     # 5. feature count + exact column set/order
     expected = META_COLUMNS + FEATURE_COLUMNS
     cols_ok = list(features.columns) == expected
-    count_ok = len(FEATURE_COLUMNS) == 74
+    count_ok = len(FEATURE_COLUMNS) == 136
     record(cols_ok and count_ok,
-           f"(5) feature count==74 & exact column order matches "
+           f"(5) feature count==136 & exact column order matches "
            f"(count={len(FEATURE_COLUMNS)}, order_ok={cols_ok})")
 
     # 6. per-row run_id/window_id alignment features <-> meta

@@ -20,11 +20,12 @@ def test_expected_sensor_columns_exist():
     assert {
         "timestamp_s", "engine_rpm", "coolant_temp_c",
         "throttle_pct", "engine_load", "stft_pct", "ltft_pct",
-        "condition",
+        "ignition_timing", "condition",
     }.issubset(telemetry.columns)
 
     assert {
         "timestamp_s", "microphone_audio", "knock_sensor",
+        "accel_x", "accel_y", "accel_z",
         "crank_pulse", "condition",
     }.issubset(waveform.columns)
 
@@ -118,3 +119,76 @@ def test_valve_wear_has_elevated_mid_band_energy():
         worn["knock_sensor"].to_numpy(), fs)["mid_1k_5k_ratio"]
 
     assert worn_r > normal_r * 1.3
+
+
+# ----------------------------------------------------------------------------
+# New sensors: 3-axis accelerometer + ignition timing
+# ----------------------------------------------------------------------------
+def test_knock_retards_ignition_timing():
+    # The ECU retards spark to protect the engine under knock.
+    normal = simulate_engine("normal", seed=42)[0]
+    knock = simulate_engine("knock", seed=42)[0]
+    assert knock["ignition_timing"].mean() < normal["ignition_timing"].mean() - 2.0
+
+
+def test_misfire_ignition_timing_scatter():
+    # Misfire scatters timing widely; normal is tight around ~15 deg.
+    normal = simulate_engine("normal", seed=42)[0]
+    misfire = simulate_engine("misfire", seed=42)[0]
+    assert misfire["ignition_timing"].std() > normal["ignition_timing"].std() * 2.0
+
+
+def test_accel_loudness_not_discriminative():
+    # Per-run amp_scale is applied to every axis, so raw RMS must not separate
+    # the classes; band RATIOS (below) carry the signature instead.
+    from feature_extraction.signal_features import extract_time_features
+
+    rms = {}
+    for cond in ("normal", "knock", "valve_train_wear", "misfire"):
+        _, w = simulate_engine(cond, seed=42)
+        rms[cond] = extract_time_features(w["accel_x"].to_numpy())["rms"]
+    vals = np.array(list(rms.values()))
+    # spread across conditions is small relative to the mean level
+    assert vals.std() / vals.mean() < 0.5
+
+
+def test_knock_elevates_accel_x_knock_band():
+    # accel_x carries the 7 kHz ring -> 5-10 kHz band ratio elevated for knock.
+    from feature_extraction.signal_features import extract_band_features
+    fs = 25600
+
+    normal_r = extract_band_features(
+        simulate_engine("normal", seed=42)[1]["accel_x"].to_numpy(),
+        fs)["knock_5k_10k_ratio"]
+    knock_r = extract_band_features(
+        simulate_engine("knock", seed=42)[1]["accel_x"].to_numpy(),
+        fs)["knock_5k_10k_ratio"]
+    assert knock_r > normal_r * 1.3
+
+
+def test_valve_wear_elevates_accel_y_mid_band():
+    # accel_y carries the 4 kHz cam click -> 1-5 kHz mid band ratio elevated.
+    from feature_extraction.signal_features import extract_band_features
+    fs = 25600
+
+    normal_r = extract_band_features(
+        simulate_engine("normal", seed=42)[1]["accel_y"].to_numpy(),
+        fs)["mid_1k_5k_ratio"]
+    worn_r = extract_band_features(
+        simulate_engine("valve_train_wear", seed=42)[1]["accel_y"].to_numpy(),
+        fs)["mid_1k_5k_ratio"]
+    assert worn_r > normal_r * 1.3
+
+
+def test_misfire_accel_z_crank_rate_modulation():
+    # Misfire amplitude-modulates accel_z at the crank rate -> the envelope
+    # repetition rate locks near the crank frequency (~25-35 Hz here).
+    from feature_extraction.signal_features import extract_envelope_features
+    fs = 25600
+
+    _, misfire = simulate_engine("misfire", seed=42)
+    _, normal = simulate_engine("normal", seed=42)
+    mis = extract_envelope_features(misfire["accel_z"].to_numpy(), fs)
+    nor = extract_envelope_features(normal["accel_z"].to_numpy(), fs)
+    # misfire envelope is burstier (crank-rate AM) than the steady normal axis
+    assert mis["env_peak_to_mean"] > nor["env_peak_to_mean"]

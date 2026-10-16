@@ -37,17 +37,29 @@ Files are written to `data/raw/`.
 | `engine_load` | Dimensionless simulated load, 0–1 | 10 Hz |
 | `stft_pct` | Short-term fuel trim, percent-like value | 10 Hz |
 | `ltft_pct` | Long-term fuel trim, percent-like value | 10 Hz |
+| `ignition_timing` | Spark advance, degrees BTDC (fault-aware: retards under knock, scatters under misfire) | 10 Hz |
 | `condition` | Synthetic condition label | 10 Hz |
 
 ## Waveform schema
 
+Fast channels are sampled at **25,600 Hz**. The 3-axis accelerometer is modelled
+at the same 25.6 kHz rate rather than the ~4,000 Hz typical of a spec-sheet
+industrial accelerometer; this is an intentional prototype choice so the knock /
+valve-train ring physics stay in band and ride the same fast-channel pipeline.
+
 | Column | Unit / meaning | Nominal sampling rate |
 |---|---|---:|
-| `timestamp_s` | Seconds from recording start | 4,000 Hz |
-| `microphone_audio` | Arbitrary synthetic amplitude | 4,000 Hz |
-| `knock_sensor` | Arbitrary synthetic amplitude | 4,000 Hz |
-| `crank_pulse` | Synthetic binary crank signal | 4,000 Hz |
-| `condition` | Synthetic condition label | 4,000 Hz |
+| `timestamp_s` | Seconds from recording start | 25,600 Hz |
+| `microphone_audio` | Arbitrary synthetic amplitude | 25,600 Hz |
+| `knock_sensor` | Arbitrary synthetic amplitude | 25,600 Hz |
+| `accel_x` | Accelerometer X, arbitrary amplitude (carries 7 kHz knock ring) | 25,600 Hz |
+| `accel_y` | Accelerometer Y, arbitrary amplitude (carries 4 kHz valve-train click) | 25,600 Hz |
+| `accel_z` | Accelerometer Z, arbitrary amplitude (crank-rate modulation under misfire) | 25,600 Hz |
+| `crank_pulse` | Synthetic binary crank signal | 25,600 Hz |
+| `condition` | Synthetic condition label | 25,600 Hz |
+
+A per-run amplitude scale (`amp_scale`) is applied to every waveform channel so
+that raw loudness alone is not discriminative across conditions.
 
 ## Reproducibility
 

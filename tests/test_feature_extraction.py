@@ -78,9 +78,10 @@ def test_telemetry_feature_count_and_slope():
         "engine_load": [0.3, 0.3, 0.3, 0.3, 0.3],
         "stft_pct": [0, 0, 0, 0, 0],
         "ltft_pct": [2, 2, 2, 2, 2],
+        "ignition_timing": [15, 15, 15, 15, 15],
     })
     out = extract_telemetry_features(df)
-    assert len(out) == 30  # 6 signals x 5 stats
+    assert len(out) == 35  # 7 signals x 5 stats
     assert out["tel_coolant_temp_c_slope"] > 0
 
 
@@ -124,10 +125,16 @@ def test_features_for_window_schema():
     mic = waveform["microphone_audio"].to_numpy()[:win]
     knock = waveform["knock_sensor"].to_numpy()[:win]
     crank = waveform["crank_pulse"].to_numpy()[:win]
-    feat, spec = features_for_window(mic, knock, crank, telemetry, FS)
+    ax = waveform["accel_x"].to_numpy()[:win]
+    ay = waveform["accel_y"].to_numpy()[:win]
+    az = waveform["accel_z"].to_numpy()[:win]
+    feat, spec = features_for_window(mic, knock, crank, telemetry, ax, ay, az, FS)
     assert set(feat.keys()) == set(FEATURE_COLUMNS)
-    assert len(feat) == 74
-    assert spec.shape[0] == 2
+    assert len(feat) == 136
+    # the three accelerometer axes each contribute 19 prefixed fast-channel keys
+    for prefix in ("accel_x", "accel_y", "accel_z"):
+        assert sum(k.startswith(prefix + "_") for k in feat) == 19
+    assert spec.shape[0] == 2  # spectrogram stays 2-channel (mic, knock)
 
 
 def test_fs_gate_rejects_wrong_rate():

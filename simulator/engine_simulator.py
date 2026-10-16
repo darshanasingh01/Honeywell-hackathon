@@ -18,6 +18,22 @@ features are discriminative beyond raw loudness:
 A wear-severity ramp worsens the fault amplitude over the run (for "predict wear"),
 and a seed-driven per-run amplitude/noise variation keeps loudness alone from
 separating the classes.
+
+Three-axis accelerometer channels (``accel_x``, ``accel_y``, ``accel_z``) are also
+emitted at 25.6 kHz. Each axis carries a distinct, fault-aware vibration mix so the
+per-axis band structure (not raw loudness) is discriminative:
+  - accel_x: broadband block noise + firing-rate thumps; for knock it also carries a
+    scaled 7 kHz ring at fe+delay (lands in the 5-10 kHz band, like the knock sensor).
+  - accel_y: block noise + lighter firing content; for valve_train_wear it carries a
+    scaled 4 kHz click at each cam event (1-5 kHz mid band).
+  - accel_z: block noise + firing thumps; for misfire it is amplitude-modulated at the
+    crank rate and kicked at each dropped firing (crank-rate modulation / low band).
+The per-run ``amp_scale`` is applied last to every channel, so loudness alone cannot
+separate the classes.
+
+A telemetry channel ``ignition_timing`` (deg BTDC, 10 Hz) is fault-aware: normal /
+valve_train_wear sit near ~15 deg, knock retards toward ~8 deg with wear severity,
+misfire scatters widely, overheating retards slightly to ~13 deg.
 """
 from __future__ import annotations
 
@@ -73,6 +89,10 @@ def simulate_engine(
         raise ValueError("signal_hz must be at least 1000 for this prototype")
 
     rng = np.random.default_rng(seed)
+    # Separate RNG stream for the added sensors (accelerometer + ignition timing)
+    # so the existing mic / knock / crank / telemetry draws stay bit-identical to
+    # the pre-sensor baseline (these additions are additive, not a reshuffle).
+    accel_rng = np.random.default_rng(seed + 10_000)
     t = np.arange(0, duration_s, 1 / telemetry_hz)
     tw = np.arange(0, duration_s, 1 / signal_hz)
     n = tw.size
@@ -110,6 +130,22 @@ def simulate_engine(
     elif condition == "overheating":
         coolant += 2.2 * t  # steep ramp: clearly positive slope after CAN quant
         load = np.clip(load * 0.92, 0.05, 0.95)
+
+    # Ignition timing (deg BTDC, 10 Hz telemetry). Fault-aware: the ECU retards
+    # timing to protect the engine when it detects knock, scatters under misfire,
+    # and retards slightly when running hot. Severity is sampled on the telemetry
+    # clock (0.4 -> 1.0 over the run) so the retard deepens as wear worsens.
+    tel_severity = 0.4 + 0.6 * (t / duration_s)
+    if condition == "knock":
+        # Retard from ~15 deg toward ~8 deg with severity.
+        ignition_timing = 15.0 - 7.0 * tel_severity + accel_rng.normal(0, 0.3, len(t))
+    elif condition == "misfire":
+        ignition_timing = 15.0 + accel_rng.normal(0, 2.0, len(t))  # wide scatter
+    elif condition == "overheating":
+        ignition_timing = 13.0 + accel_rng.normal(0, 0.4, len(t))  # slight retard
+    else:  # normal, valve_train_wear
+        ignition_timing = 15.0 + accel_rng.normal(0, 0.4, len(t))
+    ignition_timing = np.clip(ignition_timing, 5.0, 25.0)
 
     # Instantaneous RPM / firing frequency across the waveform clock.
     rpm_wave = np.interp(tw, t, rpm)
@@ -153,27 +189,34 @@ def simulate_engine(
     # --- Knock sensor base (vibration) ---
     knock_signal = np.zeros(n)
 
+    # --- Vibration kernels (hoisted so the accel block below can reuse them) ---
+    # 7 kHz damped knock ring (5-10 kHz band).
+    ring_len = int(round(KNOCK_RING_MS / 1000.0 * signal_hz))
+    rk = np.arange(ring_len) / signal_hz
+    base_ring = np.exp(-KNOCK_DECAY * rk) * np.sin(2 * np.pi * KNOCK_RING_HZ * rk)
+    knock_delay = int(round(KNOCK_DELAY_MS / 1000.0 * signal_hz))
+    # 4 kHz damped valve-train click (1-5 kHz mid band).
+    click_len = int(round(VALVE_CLICK_MS / 1000.0 * signal_hz))
+    ck = np.arange(click_len) / signal_hz
+    base_click = np.exp(-VALVE_DECAY * ck) * np.sin(2 * np.pi * VALVE_CLICK_HZ * ck)
+    # Cam rate = RPM/120 -> one click per 2 revolutions (every 4th firing).
+    cam_events = firing_events[::4]
+    # Record the firings that actually knock so the accel_x ring matches them.
+    knock_ring_events = []  # list of (start_index, amplitude)
+
     # --- Condition-specific high-frequency physics ---
     if condition == "knock":
-        ring_len = int(round(KNOCK_RING_MS / 1000.0 * signal_hz))
-        rk = np.arange(ring_len) / signal_hz
-        base_ring = np.exp(-KNOCK_DECAY * rk) * np.sin(2 * np.pi * KNOCK_RING_HZ * rk)
-        delay = int(round(KNOCK_DELAY_MS / 1000.0 * signal_hz))
         for fe in firing_events:
             if rng.random() > KNOCK_PROB:
                 continue  # sporadic: only some firings knock
             sev = severity[min(fe, n - 1)]
             amp = (0.15 + 0.45 * rng.random()) * sev  # random per-cycle amplitude
-            start = fe + delay
+            start = fe + knock_delay
             _add_kernel(knock_signal, start, amp * base_ring)
             _add_kernel(audio, start, 0.4 * amp * base_ring)
+            knock_ring_events.append((start, amp))
 
     elif condition == "valve_train_wear":
-        # Cam rate = RPM/120 -> one click per 2 revolutions (every 4th firing).
-        cam_events = firing_events[::4]
-        click_len = int(round(VALVE_CLICK_MS / 1000.0 * signal_hz))
-        ck = np.arange(click_len) / signal_hz
-        base_click = np.exp(-VALVE_DECAY * ck) * np.sin(2 * np.pi * VALVE_CLICK_HZ * ck)
         for ce in cam_events:
             sev = severity[min(ce, n - 1)]
             amp = (0.5 + 0.35 * rng.random()) * sev
@@ -184,13 +227,57 @@ def simulate_engine(
         thermal_factor = 1 + 0.025 * tw
         audio *= thermal_factor
 
+    # --- Three-axis accelerometer (25.6 kHz) ---
+    # Broadband "block" noise floor on every axis (seed-driven level), then
+    # axis-specific firing content and the fault-aware signatures. amp_scale is
+    # applied last (below) so raw loudness cannot separate the classes.
+    accel_x = noise_scale * 0.030 * accel_rng.normal(size=n)
+    accel_y = noise_scale * 0.030 * accel_rng.normal(size=n)
+    accel_z = noise_scale * 0.030 * accel_rng.normal(size=n)
+
+    for fe in firing_events:
+        dropped = fe in misfire_drop
+        # accel_x: firing-rate thumps (dropped on misfire).
+        if not dropped:
+            _add_kernel(accel_x, fe, 0.12 * (0.85 + 0.30 * accel_rng.random()) * thump_kernel)
+        # accel_y: lighter firing content.
+        _add_kernel(accel_y, fe, 0.06 * (0.85 + 0.30 * accel_rng.random()) * thump_kernel)
+        # accel_z: firing-rate thumps (dropped on misfire).
+        if not dropped:
+            _add_kernel(accel_z, fe, 0.12 * (0.85 + 0.30 * accel_rng.random()) * thump_kernel)
+
+    if condition == "knock":
+        # Same 7 kHz ring at the same fe+delay starts the knock sensor saw, so
+        # accel_x carries matching 5-10 kHz knock-band energy.
+        for start, amp in knock_ring_events:
+            _add_kernel(accel_x, start, 1.4 * amp * base_ring)
+
+    elif condition == "valve_train_wear":
+        # 4 kHz cam-rate clicks into accel_y (1-5 kHz mid band).
+        for ce in cam_events:
+            sev = severity[min(ce, n - 1)]
+            amp = (0.5 + 0.35 * accel_rng.random()) * sev
+            _add_kernel(accel_y, ce, 1.2 * amp * base_click)
+
+    elif condition == "misfire":
+        # Crank-rate amplitude modulation + a low-frequency kick at each dropped
+        # firing: accel_z gains crank-rate envelope repetition and low-band energy.
+        crank_am = 1.0 + 0.8 * np.sin(2 * np.pi * crank_phase_cycles)
+        accel_z = accel_z * crank_am
+        for fe in sorted(misfire_drop):
+            _add_kernel(accel_z, fe, 0.5 * thump_kernel)
+
     # Broadband noise (seed-driven level).
     audio += noise_scale * 0.035 * rng.normal(size=n)
     knock_signal += noise_scale * 0.025 * rng.normal(size=n)
 
-    # Apply seed-driven per-run amplitude variation to the whole waveform.
+    # Apply seed-driven per-run amplitude variation to every channel so loudness
+    # alone is not discriminative.
     audio *= amp_scale
     knock_signal *= amp_scale
+    accel_x *= amp_scale
+    accel_y *= amp_scale
+    accel_z *= amp_scale
 
     telemetry = pd.DataFrame({
         "timestamp_s": t,
@@ -200,12 +287,16 @@ def simulate_engine(
         "engine_load": load,
         "stft_pct": fuel_stft,
         "ltft_pct": fuel_ltft,
+        "ignition_timing": ignition_timing,
         "condition": condition,
     })
     waveform = pd.DataFrame({
         "timestamp_s": tw,
         "microphone_audio": audio,
         "knock_sensor": knock_signal,
+        "accel_x": accel_x,
+        "accel_y": accel_y,
+        "accel_z": accel_z,
         "crank_pulse": crank_pulse,
         "condition": condition,
     })
